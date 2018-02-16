@@ -1,0 +1,398 @@
+@CHARSET "UTF-8";
+
+
+.topnav {
+	font-size:14px;
+	line-height:34px;
+
+}
+.topnav  a.as{
+	text-decoration:none;
+	color: #555;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	*background:transparent url("../images/signin-nav-bg-ie.png") no-repeat 0 0;
+	*padding:4px 12px 6px;
+}
+
+a.as.menu-open span {
+	background-image:url("../images/toggle_up_dark.png");
+	color: #FFFFFF;
+}
+
+a.as {
+	position:relative;
+}
+a.as span {
+	height:34px;
+	background:url(../../img/myadd/addpartner.png) no-repeat;
+	background-position:right center;
+	line-height:20px;
+	display:block;
+	padding:6px 0px 6px 0px;
+	font-size: 12px;
+	color: #555;
+}
+
+
+
+/**按钮背景图.disk-info,*/
+.btn, .button,  .space-status, .space-status i, .file-list dt, .file-list dt a, .title-float, .title-float a, .file-more a, .file-more span, .file-pages, .pages, .page-index-list .box-con, .popup-space h3 {
+    background-image: url("../images/spr_x.png");
+    background-repeat: repeat-x;
+}
+
+
+
+
+.select-info {
+	display:block !important;
+	-moz-user-select:none;
+    margin: 8px;
+	border:1px solid #ddd;
+    overflow: hidden;
+    padding: 14px 10px 14px 60px;
+    position: relative;
+}
+.select-info  .top-label {
+    height: 20px;
+    left: 5px;
+    position: absolute;
+    top: 20px;
+    font-size: 14px;
+    font-weight: bold;
+	color: #3da8f6;
+}
+.select-info ul{
+	margin-left:10px;
+	
+}
+
+.select-info ul li {
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    margin-right: 10px;
+    margin-top: 5px;
+    padding: 2px 15px;
+    text-align: center;
+	cursor: pointer;
+	list-style-type: none;
+}
+
+
+.select-info li:hover {
+	background-color: #DFECFF;
+}
+.select-info  li.current01 {
+    color: #F57900;
+	font-weight: bold;
+}
+
+
+/**xmenu样式*/
+.xmenu {
+	-moz-user-select:none;
+	width:600px !important;
+	background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #BBBBBB;
+    border-radius: 4px 4px 4px 4px;
+	width: 500px;
+	overflow-y:auto;
+	position:absolute !important;
+	top:45px !important;
+	left:20px !important;
+	
+}
+.xmenu dl{
+	height:350px;
+	overflow-y:auto;	
+}
+
+
+.xmenu dl dt {
+	background:url(../images/bg_toggle_up2.gif) no-repeat scroll 8px	8px transparent;
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #3da8f6;
+	cursor: pointer;
+	margin: 8px 0;
+	padding-left: 25px;
+	display: block;
+}
+.xmenu dl dt:hover {
+	background-color: #F4FFF4;
+
+}
+
+
+.xmenu dl dt.open {
+	background:url(../images/bg_toggle_down2.gif) no-repeat scroll 8px 8px transparent;
+}
+.xmenu dl dt.open:hover {
+	background-color: #F4FFF4;
+}
+
+.xmenu dl dd {
+	line-height: 20px;
+}
+
+.xmenu dl dd h2 {
+	font-size: 15px;
+}
+
+.xmenu dl dd ul {
+   padding-bottom:12px; 
+   overflow: hidden;
+}
+
+.xmenu dl dd ul li {
+	background-position: 6px 6px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    float: left;
+    height: 24px;
+    overflow: hidden;
+    text-indent: 20px;
+    width: 150px;
+	color:#666666;
+
+}
+.xmenu dl dd ul  li:hover {
+    background-color: #DFECFF;
+}
+
+
+.xmenu dl dd ul  li.current01 {
+    color: #F57900;
+	font-weight: bold;
+}
+
+
+/** css动画按钮*/
+.a-btn {
+    -moz-transition: box-shadow 0.3s ease-in-out 0s;
+    background: -moz-linear-gradient(center top , #FFFFFF 0%, #F6F6F6 74%, #EDEDED 100%) repeat scroll 0 0 transparent;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(188, 188, 188, 0.1);
+    display: block;
+    float: right;
+    margin: 2px;
+    overflow: hidden;
+    position: relative;
+}
+.a-btn-text {
+    color: #D7565B;
+    display: block;
+    font-size: 12px;   
+    text-align:center;
+    line-height: 16px;
+    padding:5px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.a-btn:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    box-shadow: 0 0 9px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(188, 188, 188, 0.1);
+}
+.a-btn:hover .a-btn-symbol {
+    opacity: 0;
+}
+
+/**关闭按钮样式*/
+.m-close{
+	background: url("../images/controls.png") no-repeat scroll -25px 0 transparent;
+	bottom: 0;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    text-indent: -9999px;
+    width: 25px;
+	cursor: pointer;
+	margin: 5px;
+}
+.m-close:hover {
+    background-position: -25px -25px;
+}
+
+
+#main01 .card { height:34px; line-height:34px;}
+
+#main01 .card:after { position:relative; z-index:-1; content: "";  display: block; height: 10px; }
+
+#main01 .card h2 { text-align:center; color:#000; }
+
+#main01 .card ul dl { padding-left:1em; border-left:1px dashed #DDD; }
+
+#main01 .card ul dt { padding:8px 0; font-weight:bold; }
+
+#main01 .card ul dd { margin-left:0; }
+
+#main01 .card ul dd dl { margin-left:2em; }
+
+#footer { padding:20px 0; text-align:center; color:#999; }
+
+#footer .copyright a { color:#999; }
+
+
+
+/*///// code /////*/
+
+.runCode:after { content: "..."; }
+
+.button, 
+
+.runCode { display:inline-block; padding:1px 12px; text-decoration:none; color: #333 !important; cursor:pointer; border: solid 1px #999; border-radius: 5px; background: #DDD; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#DDDDDD');
+
+background: linear-gradient(top, #FFF, #DDD); background: -moz-linear-gradient(top, #FFF, #DDD); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFF), to(#DDD)); text-shadow: 0px 1px 1px rgba(255, 255, 255, 1); box-shadow: 0 1px 0 rgba(255, 255, 255, .2), 0 -1px 0 rgba(0, 0, 0, .09); -moz-transition:-moz-box-shadow linear .2s;
+
+-webkit-transition: -webkit-box-shadow linear .2s;
+
+transition: box-shadow linear .2s;
+
+white-space: nowrap; }
+
+.button:focus, .runCode:focus { outline:none 0; border-color:#426DC9; box-shadow:0 0 8px rgba(66, 109, 201, .9); }
+
+.button:hover, .runCode:hover { color:#000; border-color:#666; }
+
+.button:active, .runCode:active { border-color:#666; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DDDDDD', endColorstr='#FFFFFF');
+
+background: linear-gradient(top, #DDD, #FFF); background: -moz-linear-gradient(top, #DDD, #FFF); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#DDD), to(#FFF)); box-shadow:inset 0 1px 5px rgba(66, 109, 201, .9), inset 0 1px 1em rgba(0, 0, 0, .3); }
+
+.button[disabled] { cursor:default; color:#666; background:#DDD; border: 1px solid #999; filter:alpha(opacity=50); opacity:.5; box-shadow:none; }
+
+pre { position:relative; padding:5px; font-size:14px; border:1px solid #EFEFEF; background:#F9F9F9; z-index:2; border-radius: 5px; }
+
+pre:before, pre:after { visibility:hidden; display:block; content:""; width:0; height:0; border:9px solid transparent; position:absolute; }
+
+pre:before { border-top-color:#EEF7F5; position:absolute; left:18px; bottom:-18px; z-index:2; }
+
+pre:after { border-top-color:#c7dcd3; left:18px; bottom:-19px; z-index:1; }
+
+pre.select { background:#EEF7F5 !important; border:1px solid #D7EAE2; border-right-color:#c7dcd3; border-bottom-color:#c7dcd3; }
+
+pre.select:before, pre.select:after { visibility:visible; }
+
+/*//// skin ////*/
+
+#skins { width:560px; padding:8px 0; }
+
+#skins .button { width:82px; text-align:center; }
+
+#skins ul, #skins li { padding:0; margin:0; list-style:none; }
+
+#skins li { display:inline; }
+
+#skins ul { text-align:center; }
+
+
+
+#showChange { position:fixed; bottom:0; right:0; z-index:87; }
+
+@media only screen and (max-width:980px) {
+
+ h1.title {
+
+font-size:24px;
+
+}
+
+ #header, #main01, #footer {
+
+max-width:100%;
+
+}
+
+ img {
+
+max-width:100%
+
+}
+
+}
+
+@media print {
+
+#header .summary, a { color: #000 !important; }
+
+#header, #main01, #footer { width:auto; }
+
+#main01 .card { padding:10px; margin-top:10px; box-shadow:none; border:none 0; border-top: 1px dashed #666; border-radius:0; }
+
+#main01 .card h2 { text-align:left; }
+
+#main01 .card:after { display:none; }
+
+h1.title strong:after, #index, #print, .runCode, .button, #skin-menu { display:none; }
+
+}
+
+pre.sh_sourceCode { color: #000000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_keyword { color: #009; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_type { color: #0000ff; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_string { color: #00F; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_regexp { color: #060; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_specialchar { color: #C42DA8; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_comment { color: #999; font-weight: normal; font-style: italic; }
+
+pre.sh_sourceCode .sh_number { color: #F00; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_preproc { color: #00b800; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_symbol { color: #009; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_function { color: #000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_cbracket { color: #009; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_url { color: #ff0000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_date { color: #0000ff; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_time { color: #0000ff; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_file { color: #0000ff; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_ip { color: #ff0000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_name { color: #ff0000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_variable { color: #ec7f15; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_oldfile { color: #C42DA8; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_newfile { color: #ff0000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_difflines { color: #0000ff; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_selector { color: #ec7f15; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_property { color: #0000ff; font-weight: bold; font-style: normal; }
+
+pre.sh_sourceCode .sh_value { color: #ff0000; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_predef_var { color: #909; font-weight: normal; font-style: normal; }
+
+pre.sh_sourceCode .sh_predef_func { color: #099; font-weight: normal; font-style: normal; }
+
+
+
+
+
+
+
+
+
+
+
+

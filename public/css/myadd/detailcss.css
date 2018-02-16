@@ -1,0 +1,56 @@
+.change-table input, button, select{
+	width:400px;
+	line-height:30px;
+	height:40px;
+	padding:4px 10px;
+	border:solid 1px #dfdfdf;
+	border-radius:3px;
+}
+.change-table textarea{
+	width:400px;
+	line-height:30px;
+	padding:4px 10px;
+	border:solid 1px #dfdfdf;
+	border-radius:3px !important;
+	resize:none
+}
+.change-table select option{
+	line-height:40px !important;
+}
+
+.change-table input:focus, select:hover, textarea:focus{
+	border-color:#427fed;
+}
+
+.de-table input, button, select {
+    width: 30%;
+    line-height: 30px;
+    height: 40px;
+    padding: 4px 10px;
+    border: solid 1px #dfdfdf;
+    border-radius: 3px;
+}
+
+/*    进度条显示    */
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
