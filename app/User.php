@@ -5,14 +5,16 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPasswordNotification as RestPasswordNotification;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRoles;
 
     public static $rules = array(
 
-        'username'=>'required|alpha|min:2',
+        'name'=>'required|alpha|min:2',
 
         'password'=>'required|alpha_num|between:6,12'
 
