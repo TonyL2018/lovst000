@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
         $this->notify(new RestPasswordNotification($token));
     }
+
+    public function setPasswordAttribute($password)
+    {   
+        $this->attributes['password'] = bcrypt($password);
+    }
 }
