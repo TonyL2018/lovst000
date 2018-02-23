@@ -15,7 +15,6 @@ use Session;
 class PermissionController extends Controller {
 
     public function __construct() {
-        $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
     }
 
     /**
@@ -25,8 +24,9 @@ class PermissionController extends Controller {
     */
     public function index() {
         $permissions = Permission::all(); //Get all permissions
+        $roles = Role::get(); //Get all roles
 
-        return view('permissions.index')->with('permissions', $permissions);
+        return view('permissions.index', compact('permissions', 'roles'));
     }
 
     /**
@@ -104,6 +104,7 @@ class PermissionController extends Controller {
     * @return \Illuminate\Http\Response
     */
     public function update(Request $request, $id) {
+      if($id != 0){
         $permission = Permission::findOrFail($id);
         $this->validate($request, [
             'name'=>'required|max:40',
@@ -114,7 +115,29 @@ class PermissionController extends Controller {
         return redirect()->route('permissions.index')
             ->with('flash_message',
              'Permission'. $permission->name.' updated!');
-
+      }
+      else{
+        $permissions = Permission::all(); //Get all permissions
+        $roles = Role::get(); //Get all roles
+        foreach ($roles as $role) {
+          foreach ($permissions as $permission) {
+            $input=$request->input('permission'.$role->id.$permission->id);
+            if($input!=0){
+              if(!$role->hasPermissionTo($permission->name)){
+                $role->givePermissionTo($permission->name);
+              }
+            }
+            else{
+              if($role->hasPermissionTo($permission->name)){
+                $role->revokePermissionTo($permission->name);
+              }
+            }
+          }
+        }
+        return redirect()->route('permissions.index')
+            ->with('flash_message',
+             '権限が更新されました!');
+      }
     }
 
     /**
@@ -126,8 +149,8 @@ class PermissionController extends Controller {
     public function destroy($id) {
         $permission = Permission::findOrFail($id);
 
-    //Make it impossible to delete this specific permission
-    if ($permission->name == "Administer roles & permissions") {
+        //Make it impossible to delete this specific permission
+        if ($permission->name == "TOPページ^カレンダー表示") {
             return redirect()->route('permissions.index')
             ->with('flash_message',
              'Cannot delete this Permission!');

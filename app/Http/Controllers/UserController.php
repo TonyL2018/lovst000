@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Honnbu;
 use Auth;
 
 //Importing laravel-permission models
@@ -17,7 +18,7 @@ use Session;
 class UserController extends Controller {
 
     public function __construct() {
-        $this->middleware(['auth', 'isAdmin']); //isAdmin middleware lets only users with a //specific permission permission to access these resources
+        $this->middleware(['auth', 'checkRole:設定^アカウント管理']);
     }
 
     /**
@@ -49,14 +50,19 @@ class UserController extends Controller {
     * @return \Illuminate\Http\Response
     */
     public function store(Request $request) {
-    //Validate name, email and password fields
         $this->validate($request, [
+            'staff_id'=>'required|integer',
             'name'=>'required|max:120',
+            'last_name_kanji'=>'required|max:120',
+            'first_name_kanji'=>'required|max:120',
+            'last_name_kana'=>'required|max:120',
+            'first_name_kana'=>'required|max:120',
             'email'=>'required|email|unique:users',
+            'roles'=>'required',
             'password'=>'required|min:6|confirmed'
         ]);
 
-        $user = User::create($request->only('email', 'name', 'password')); //Retrieving only the email and password data
+        $user = User::create($request->only('email', 'name', 'password', 'staff_id', 'last_name_kanji', 'first_name_kanji', 'last_name_kana', 'first_name_kana'));
 
         $roles = $request['roles']; //Retrieving the roles field
     //Checking if a role was selected
@@ -67,10 +73,14 @@ class UserController extends Controller {
             $user->assignRole($role_r); //Assigning role to user
             }
         }
+        else{
+          $role_r = Role::where('id', '=', $roles)->firstOrFail();
+          $user->assignRole($role_r); //Assigning role to user
+        }
     //Redirect to the users.index view and display message
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully added.');
+             'ユーザーが追加されました。');
     }
 
     /**
@@ -92,8 +102,9 @@ class UserController extends Controller {
     public function edit($id) {
         $user = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
+        $honnbus = Honnbu::all();
 
-        return view('users.edit', compact('user', 'roles')); //pass user and roles data to view
+        return view('users.edit', compact('user', 'roles', 'honnbus'));
 
     }
 
@@ -113,7 +124,7 @@ class UserController extends Controller {
             'email'=>'required|email|unique:users,email,'.$id,
             'password'=>'required|min:6|confirmed'
         ]);
-        $input = $request->only(['name', 'email', 'password']); //Retreive the name, email and password fields
+        $input = $request->only(['name', 'email', 'password', 'fc_id']); //Retreive the name, email and password fields
         $roles = $request['roles']; //Retreive all roles
         $user->fill($input)->save();
 
@@ -125,7 +136,7 @@ class UserController extends Controller {
         }
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully edited.');
+             'ユーザーは正常に編集されました。');
     }
 
     /**

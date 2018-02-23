@@ -20,7 +20,7 @@
     <link href="{{ asset('css/weather-icons.min.css') }}" rel="stylesheet" />
 
     <!--Beyond styles-->
-    <!-- link id="beyond-link" href="{{ asset('css/beyond.min.css') }}" rel="stylesheet" / -->
+    <link id="beyond-link" href="{{ asset('css/beyond.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/demo.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/typicons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/animate.min.css') }}" rel="stylesheet" />
@@ -54,16 +54,13 @@
 
 
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'LOVST') }}
                 </a>
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
+                    <!-- ul class="nav navbar-nav">
                         <li><a href="{{ url('/') }}">Home</a></li>
-                        @if (!Auth::guest())
-                            <li><a href="{{ route('posts.create') }}">New Article</a></li>
-                         @endif
-                    </ul>
+                    </ul -->
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
@@ -79,9 +76,6 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        @role('Admin') {{-- Laravel-permission blade helper --}}
-                                        <a href="#"><i class="fa fa-btn fa-unlock"></i>Admin</a>
-                                        @endrole
                                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>

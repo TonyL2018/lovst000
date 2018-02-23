@@ -1,5 +1,5 @@
 {{-- \resources\views\permissions\create.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.leftnav')
 
 @section('title', '| Create Permission')
 
@@ -16,11 +16,11 @@
         {{ Form::label('name', 'Name') }}
         {{ Form::text('name', '', array('class' => 'form-control')) }}
     </div><br>
-    @if(!$roles->isEmpty()) //If no roles exist yet
+    @if(!$roles->isEmpty())
         <h4>Assign Permission to Roles</h4>
 
         @foreach ($roles as $role)
-            {{ Form::checkbox('roles[]',  $role->id ) }}
+            {{ Form::radio('roles[]',  $role->id ) }}
             {{ Form::label($role->name, ucfirst($role->name)) }}<br>
 
         @endforeach

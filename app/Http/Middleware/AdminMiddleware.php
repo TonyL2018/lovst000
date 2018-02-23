@@ -15,14 +15,17 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
         $user = User::all()->count();
-        if (!($user == 1)) {
-            if (!Auth::user()->hasPermissionTo('Administer roles & permissions')) //If user does //not have this permission
-        {
+        if (isset($role)) {
+            if (!Auth::user()->hasPermissionTo($role))
+            {
                 abort('401');
             }
+        }
+        else{
+          abort('401');
         }
 
         return $next($request);

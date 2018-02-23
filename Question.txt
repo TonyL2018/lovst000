@@ -1,0 +1,7 @@
+店舗マネージャー
+whether keep below authorization
+アカウント/スタッフ登録・編集
+
+FC本部 と　店舗マネージャー
+whether keep below authorization
+スタジオ管理

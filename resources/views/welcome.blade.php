@@ -69,10 +69,9 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">ホーム</a>
+                        <a href="{{ url('/setting') }}">ホーム</a>
                     @else
                         <a href="{{ route('login') }}">ログイン</a>
-                        <a href="{{ route('register') }}">登録</a>
                     @endauth
                 </div>
             @endif
