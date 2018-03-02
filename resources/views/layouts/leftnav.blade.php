@@ -42,7 +42,9 @@
               	<li class="active">
               		<a style=" text-align:center; margin-top:30px;"><img src="{{ asset('img/myadd/logo.png') }}"></a>
               		<a style=" text-align:center; margin-top:30px; width:217px;"><span class="admin">{{Auth::user() -> name}}</span></a>
-              		<a href="javascript:void(0);" style=" text-align:center; width:217px; font-size:20px;"><span class="left-name">{{Auth::user() -> store_id}}</span></a>
+                  @if(isset(Auth::user() -> fc_id))
+                  <a href="javascript:void(0);" style=" text-align:center; width:217px; font-size:20px;"><span class="left-name">{{Auth::user() -> honnbu -> name}}</span></a>
+                  @endif
                   <a href="javascript:void(0);" style=" text-align:center; width:217px"><span class="left-name">{{Auth::user()->getRoleNames()->first()}}({{Auth::user() -> name}})</span></a>
               		<a><div style=" width:80%; margin-top:30px; margin-left:10%; height:1px; background:#9a9a9a;"></div></a>
               	</li>

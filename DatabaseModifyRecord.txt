@@ -1,0 +1,15 @@
+alter table homestead.studio alter column delete_flg set default false
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE homestead.permissions SET name=REPLACE(name, '|', '^') where 1=1;
+SET SQL_SAFE_UPDATES = 1;
+
+alter table homestead.shop modify post int null
+
+alter table homestead.fc_honnbu modify capital varchar(100) not null
+
+alter table homestead.studio_schedule modify coma_10 time null
+
+alter table homestead.course alter column delete_flg set default false
+
+alter table homestead.course_question modify question_subtext varchar(500) null

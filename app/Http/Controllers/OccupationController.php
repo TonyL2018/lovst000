@@ -3,16 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Studio;
-use App\Shop;
+use App\Occupation;
 
-use Auth;
-
-class StudioController extends Controller
+class OccupationController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth', 'checkRole:設定^スタジオ管理']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,17 +14,8 @@ class StudioController extends Controller
      */
     public function index()
     {
-        if(isset(Auth::user()->store_id)){
-          $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-        }
-        elseif(isset(Auth::user()->fc_id)){
-          $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-        }
-        else{
-          $shops = Shop::all();
-        }
-
-        return view("studios.index")->with('shops', $shops);
+        $occupations = Occupation::all();
+        return view('occupations.index')->with('occupations', $occupations);
     }
 
     /**
@@ -40,17 +25,7 @@ class StudioController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->store_id)){
-        $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-      }
-      elseif(isset(Auth::user()->fc_id)){
-        $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-      }
-      else{
-        $shops = Shop::all();
-      }
-
-      return view("studios.create")->with('shops', $shops);
+        return view('occupations.create');
     }
 
     /**
@@ -61,17 +36,12 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'store_id'=>'required'
-      ]);
+        $this->validate($request, [
+          'name' => 'required|max:120',
+        ]);
 
-      $studio = Studio::create($request->only('name', 'detail', 'store_id'));
-
-      return redirect()->route('studios.index')
-          ->with('flash_message',
-           'スタジオが追加されました。');
+        $occupation = Occupation::create(['name' => $request->input('name'), 'delete_flg' => $request->input('delete_flg')]);
+        return redirect()->route('occupations.index')->with('flash_message', 'タッフ種別が追加されました。');
     }
 
     /**
@@ -116,6 +86,8 @@ class StudioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $occupation = Occupation::findOrFail($id);
+        $occupation->delete();
+        return redirect()->route('occupations.index')->with('flash_message', 'スタッフ種別は正常に削除されました。');
     }
 }

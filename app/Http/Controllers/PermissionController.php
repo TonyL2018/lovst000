@@ -61,9 +61,9 @@ class PermissionController extends Controller {
 
         if (!empty($request['roles'])) { //If one or more role is selected
             foreach ($roles as $role) {
-                $r = Role::where('id', '=', $role)->firstOrFail(); //Match input role to db record
+                $r = Role::where('id', '=', $role)->firstOrFail();
 
-                $permission = Permission::where('name', '=', $name)->first(); //Match input //permission to db record
+                $permission = Permission::where('name', '=', $name)->first();
                 $r->givePermissionTo($permission);
             }
         }

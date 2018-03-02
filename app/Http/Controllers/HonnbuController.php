@@ -12,7 +12,7 @@ use Auth;
 class HonnbuController extends Controller
 {
 
-    public function _construct(){
+    public function __construct(){
       $this->middleware(['auth', 'checkRole:設定^フランチャイズ管理']);
     }
     /**
@@ -24,10 +24,10 @@ class HonnbuController extends Controller
     {
       if(isset(Auth::user()->fc_id))
       {
-        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->get();
+        $honnbus = Honnbu::where('id', Auth::user()->fc_id)::where('delete_flg', '!=', 1)->get();
       }
       else {
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
       }
       return view('honnbus.index', compact('honnbus'));
     }
@@ -128,6 +128,10 @@ class HonnbuController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $honnbu = Honnbu::findOrFail($id);
+        $honnbu->delete_flg = 1;
+        $honnbu->save();
+        return redirect()->route('honnbus.index')
+            ->with('flash_message', 'フランチャイズが削除されました。');
     }
 }

@@ -64,7 +64,7 @@
     </div>
     <div class="form-group">
       {{ Form::label('detail', '備考') }}
-      {{ Form::textarea('detail', '', array('class' => 'form-control')) }}
+      {{ Form::textarea('detail', '', array('class' => 'form-control', 'rows' => '3')) }}
 
     </div>
 

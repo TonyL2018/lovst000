@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Studio;
-use App\Shop;
 
-use Auth;
+use App\Product;
 
-class StudioController extends Controller
+class ProductController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth', 'checkRole:設定^スタジオ管理']);
+    public function __construct()
+    {
+      $this->middleware(['auth', 'checkRole:設定^商品一覧']);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,17 +20,8 @@ class StudioController extends Controller
      */
     public function index()
     {
-        if(isset(Auth::user()->store_id)){
-          $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-        }
-        elseif(isset(Auth::user()->fc_id)){
-          $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-        }
-        else{
-          $shops = Shop::all();
-        }
-
-        return view("studios.index")->with('shops', $shops);
+      $products = Product::paginate(3);
+      return view('products.index')->with('products', $products);
     }
 
     /**
@@ -40,17 +31,7 @@ class StudioController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->store_id)){
-        $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-      }
-      elseif(isset(Auth::user()->fc_id)){
-        $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-      }
-      else{
-        $shops = Shop::all();
-      }
-
-      return view("studios.create")->with('shops', $shops);
+        //
     }
 
     /**
@@ -61,17 +42,7 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'store_id'=>'required'
-      ]);
-
-      $studio = Studio::create($request->only('name', 'detail', 'store_id'));
-
-      return redirect()->route('studios.index')
-          ->with('flash_message',
-           'スタジオが追加されました。');
+        //
     }
 
     /**

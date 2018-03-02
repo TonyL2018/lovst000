@@ -8,7 +8,6 @@ use App\User;
 use App\Honnbu;
 use Auth;
 
-//Importing laravel-permission models
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -52,7 +51,7 @@ class UserController extends Controller {
     public function store(Request $request) {
         $this->validate($request, [
             'staff_id'=>'required|integer',
-            'name'=>'required|max:120',
+            'name'=>'required|max:120|unique:users',
             'last_name_kanji'=>'required|max:120',
             'first_name_kanji'=>'required|max:120',
             'last_name_kana'=>'required|max:120',
@@ -152,6 +151,6 @@ class UserController extends Controller {
 
         return redirect()->route('users.index')
             ->with('flash_message',
-             'User successfully deleted.');
+             'ユーザーは正常に削除されました。');
     }
 }

@@ -9,7 +9,7 @@
     <h1><i class='fa fa-user-plus'></i> 編集 {{$honnbu->name}}</h1>
     <hr>
 
-    {{ Form::model($honnbu, array('route' => array('honnbus.update', $honnbu->id), 'method' => 'PUT')) }}{{-- Form model binding to automatically populate our fields with user data --}}
+    {{ Form::model($honnbu, array('route' => array('honnbus.update', $honnbu->id), 'method' => 'PUT')) }}
 
     <div class="form-group">
         {{ Form::label('name', 'フランチャイズ名') }}

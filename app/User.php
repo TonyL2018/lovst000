@@ -37,7 +37,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        //'password',
+        'remember_token',
     ];
 
     public function sendPasswordResetNotification($token)
@@ -49,4 +50,15 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($password);
     }
+
+    public function honnbu()
+    {
+      return $this->belongsTo('App\Honnbu', 'fc_id');
+    }
+
+    public function shop()
+    {
+      return $this->belongsTo('App\Shop', 'store_id');
+    }
+
 }

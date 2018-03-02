@@ -37,7 +37,7 @@
               <td style="text-align:left; vertical-align: middle"></td>
           </tr>
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">予約枠作成・編集</td>
+              <td style="text-align:left; vertical-align: middle"><a href="{{ route('schedules.index') }}">予約枠作成・編集</a></td>
               <td style="text-align:left; vertical-align: middle"></td>
           </tr>
       </tbody>
@@ -49,7 +49,7 @@
               <td style="text-align:left; vertical-align: middle"><a href="{{ route('users.index') }}">アカウント/スタッフ登録・編集</a></td>
           </tr>
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">予約枠作成・編集</td>
+              <td style="text-align:left; vertical-align: middle"><a href="{{ route('schedules.index') }}">予約枠作成・編集</a></td>
               <td style="text-align:left; vertical-align: middle"></td>
           </tr>
       </tbody>
@@ -62,8 +62,8 @@
       </thead>
       <tbody valign="middle">
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">プラン作成・編集</td>
-              <td style="text-align:left; vertical-align: middle">メールテンプレート作成・編集</td>
+              <td style="text-align:left; vertical-align: middle"><a href="{{ route('courses.index') }}">プラン作成・編集</a></td>
+              <td style="text-align:left; vertical-align: middle"><a href="{{ route('templates.index') }}">メールテンプレート作成・編集</a></td>
           </tr>
       </tbody>
       @endhasanyrole
@@ -75,19 +75,19 @@
       @hasanyrole('LOVSTホールディングス|LOVST事務所')
       <tbody valign="middle">
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">商品一覧</td>
-              <td style="text-align:left; vertical-align: middle">スタッフ種別の登録・編集</td>
+              <td style="text-align:left; vertical-align: middle"><a href='{{ route('products.index') }}'>商品一覧</a></td>
+              <td style="text-align:left; vertical-align: middle"><a href='{{ route('occupations.index') }}'>スタッフ種別の登録・編集</a></td>
           </tr>
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">パスワード変更</td>
+              <td style="text-align:left; vertical-align: middle"><a href='{{ route('passwords.index') }}'>パスワード変更</a></td>
               <td style="text-align:left; vertical-align: middle"></td>
           </tr>
       </tbody>
       @else
       <tbody valign="middle">
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">商品一覧</td>
-              <td style="text-align:left; vertical-align: middle">パスワード変更</td>
+              <td style="text-align:left; vertical-align: middle"><a href='{{ route('products.index') }}'>商品一覧</a></td>
+              <td style="text-align:left; vertical-align: middle"><a href='{{ route('passwords.index') }}'>パスワード変更</a></td>
           </tr>
       </tbody>
       @endhasanyrole

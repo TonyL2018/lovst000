@@ -60,7 +60,7 @@
         <main class="py-4">
   			<div  class="text-align-center">
   				<h1><img src="{{ asset('img/myadd/logo.png') }}"></h1>
-  			</div> 
+  			</div>
   			<div class="login-container animated fadeInDown">
   				<div class="loginbox bg-white">
   					<form method="POST" action="{{ route('login') }}">

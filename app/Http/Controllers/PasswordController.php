@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Studio;
-use App\Shop;
+use App\User;
 
 use Auth;
 
-class StudioController extends Controller
+class PasswordController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth', 'checkRole:設定^スタジオ管理']);
+    public function __construct()
+    {
+      $this->middleware(['auth']);
     }
     /**
      * Display a listing of the resource.
@@ -20,17 +20,7 @@ class StudioController extends Controller
      */
     public function index()
     {
-        if(isset(Auth::user()->store_id)){
-          $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-        }
-        elseif(isset(Auth::user()->fc_id)){
-          $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-        }
-        else{
-          $shops = Shop::all();
-        }
-
-        return view("studios.index")->with('shops', $shops);
+        return view('passwords.create')->with('user', Auth::user());
     }
 
     /**
@@ -40,17 +30,7 @@ class StudioController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->store_id)){
-        $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-      }
-      elseif(isset(Auth::user()->fc_id)){
-        $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-      }
-      else{
-        $shops = Shop::all();
-      }
-
-      return view("studios.create")->with('shops', $shops);
+        //
     }
 
     /**
@@ -61,17 +41,7 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'store_id'=>'required'
-      ]);
-
-      $studio = Studio::create($request->only('name', 'detail', 'store_id'));
-
-      return redirect()->route('studios.index')
-          ->with('flash_message',
-           'スタジオが追加されました。');
+        //
     }
 
     /**
@@ -105,7 +75,24 @@ class StudioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+          'password_current' => 'required|min:6',
+          'password'=>'required|min:6|confirmed'
+        ]);
+
+        $user = User::findOrFail($id);
+
+        if (Auth::attempt(['id' => $id, 'password' => $request->password_current]))
+        {
+          $user->fill(
+            $request->only(['password'])
+            )->save();
+
+          return redirect()->route('passwords.index')->with('flash_message', 'パスワードが正常に変更されました。');
+        }
+        else {
+          abort('555');
+        }
     }
 
     /**

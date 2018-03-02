@@ -25,14 +25,22 @@ Route::get('/setting', function () {
 
 Route::resource('users', 'UserController');
 
-//Route::resource('roles', 'RoleController');
-
 Route::resource('permissions', 'PermissionController', ['middleware' => ['auth', 'checkRole:設定^アカウント管理']]);
-
-//Route::resource('posts', 'PostController');
 
 Route::resource('honnbus', 'HonnbuController');
 
 Route::resource('shops', 'ShopController', ['middleware' => ['auth', 'checkRole:設定^店舗管理']]);
 
-Route::resource('studios', 'StudioController', ['middleware' => ['auth', 'checkRole:設定^スタジオ管理']]);
+Route::resource('studios', 'StudioController');
+
+Route::resource('schedules', 'ScheduleController');
+
+Route::resource('courses', 'CourseController', ['middleware' => ['auth', 'checkRole:設定^プラン作成・編集']]);
+
+Route::resource('templates', 'TemplateController');
+
+Route::resource('occupations', 'OccupationController', ['middleware' => ['auth', 'checkRole:設定^スタッフ種別の登録・編集']]);
+
+Route::resource('passwords', 'PasswordController');
+
+Route::resource('products', 'ProductController');

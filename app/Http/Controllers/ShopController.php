@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Studio;
 use App\Shop;
 use App\Honnbu;
 
@@ -84,7 +85,10 @@ class ShopController extends Controller
      */
     public function edit($id)
     {
-        //
+        $shop = Shop::findOrFail($id);
+        $honnbus = Honnbu::all();
+
+        return view('shops.edit', compact('shop', 'honnbus'));
     }
 
     /**
@@ -96,7 +100,19 @@ class ShopController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $shop = Shop::findOrFail($id);
+      $this->validate($request, [
+          'name'=>'required|max:120',
+          'address'=>'required|max:120',
+          'detail'=>'required|max:120',
+          'fc_id'=>'required'
+      ]);
+
+      $shop->fill($request->only('name', 'address', 'detail', 'fc_id'))->save();
+
+      return redirect()->route('shops.index')
+          ->with('flash_message',
+           '店舗は正常に編集されました。');
     }
 
     /**
@@ -109,4 +125,5 @@ class ShopController extends Controller
     {
         //
     }
+
 }

@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Studio;
-use App\Shop;
+use App\Course;
+use App\Question;
 
 use Auth;
 
-class StudioController extends Controller
+use Debugbar;
+
+class CourseController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth', 'checkRole:設定^スタジオ管理']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,17 +19,8 @@ class StudioController extends Controller
      */
     public function index()
     {
-        if(isset(Auth::user()->store_id)){
-          $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-        }
-        elseif(isset(Auth::user()->fc_id)){
-          $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-        }
-        else{
-          $shops = Shop::all();
-        }
-
-        return view("studios.index")->with('shops', $shops);
+        $courses = Course::all();
+        return view('courses.index')->with('courses', $courses);
     }
 
     /**
@@ -40,17 +30,7 @@ class StudioController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->store_id)){
-        $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-      }
-      elseif(isset(Auth::user()->fc_id)){
-        $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-      }
-      else{
-        $shops = Shop::all();
-      }
-
-      return view("studios.create")->with('shops', $shops);
+        return view('courses.create');
     }
 
     /**
@@ -61,17 +41,24 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
+        $this->validate($request, [
           'name'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'store_id'=>'required'
-      ]);
+        ]);
 
-      $studio = Studio::create($request->only('name', 'detail', 'store_id'));
+        $course = Course::create(['name' => $request->input('name'), 'owner_id' => Auth::user()->id, 'new_flg' => True]);
 
-      return redirect()->route('studios.index')
-          ->with('flash_message',
-           'スタジオが追加されました。');
+        $x = $request->input('x');
+        for($i = 1; $i <= $x; $i++)
+        {
+          $questionName = $request->input('question_name'.$i);
+          if(isset($questionName))
+          {
+            //Question::create(['course_id' => $course->id, 'question_name' => $questionName, 'question_subtext' => $request->input('question_subtext'.$i), 'new_flg' => True]);
+            Question::create(['course_id' => $course->id, 'question_name' => $questionName, 'new_flg' => True]);
+          }
+        }
+
+        return redirect()->route('courses.index')->with('flash_message', 'プランが追加されました。');
     }
 
     /**
@@ -116,6 +103,12 @@ class StudioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $course = Course::findOrFail($id);
+        foreach ($course->questions as $question) {
+          $question->delete();
+        }
+        $course->delete();
+
+        return redirect()->route('courses.index')->with('flash_message', 'プランは正常に削除されました。');
     }
 }

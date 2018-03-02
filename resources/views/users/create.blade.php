@@ -64,7 +64,7 @@
     </div>
 
     <div class="form-group">
-        {{ Form::label('password', 'Confirm パスワード') }}<br>
+        {{ Form::label('password', 'パスワード再入力') }}<br>
         {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
 
     </div>

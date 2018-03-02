@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Studio;
-use App\Shop;
+use App\Template;
+use App\Status;
 
 use Auth;
 
-class StudioController extends Controller
+class TemplateController extends Controller
 {
-    public function __construct(){
-        $this->middleware(['auth', 'checkRole:設定^スタジオ管理']);
+    public function __construct()
+    {
+      $this->middleware(['auth', 'checkRole:設定^メールテンプレート作成・編集']);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,17 +22,8 @@ class StudioController extends Controller
      */
     public function index()
     {
-        if(isset(Auth::user()->store_id)){
-          $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-        }
-        elseif(isset(Auth::user()->fc_id)){
-          $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-        }
-        else{
-          $shops = Shop::all();
-        }
-
-        return view("studios.index")->with('shops', $shops);
+      $templates = Template::all();
+      return view('templates.index')->with('templates', $templates);
     }
 
     /**
@@ -40,17 +33,8 @@ class StudioController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->store_id)){
-        $shops = Shop::where('id', '=', Auth::user()->store_id)->get();
-      }
-      elseif(isset(Auth::user()->fc_id)){
-        $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->get();
-      }
-      else{
-        $shops = Shop::all();
-      }
-
-      return view("studios.create")->with('shops', $shops);
+      $statuses = Status::all();
+      return view('templates.create')->with('statuses', $statuses);
     }
 
     /**
@@ -61,17 +45,21 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'store_id'=>'required'
-      ]);
 
-      $studio = Studio::create($request->only('name', 'detail', 'store_id'));
+        $this->validate($request, [
+          'name' => 'required|max:120',
+          'title' => 'required|max:120',
+          'content' => 'required|max:500',
+          'status' => 'required|integer',
+        ]
+        );
+        $template = Template::create(['name' => $request->input('name'),
+          'title' => $request->input('title'),
+          'status' => $request->input('status'),
+          'content' => $request->input('content'),
+          'owner_id' => Auth::user()->id]);
 
-      return redirect()->route('studios.index')
-          ->with('flash_message',
-           'スタジオが追加されました。');
+        return redirect()->route('templates.index')->with('flash_message', 'メールテンプレが追加されました。');
     }
 
     /**
@@ -116,6 +104,9 @@ class StudioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $template = Template::findOrFail($id);
+        $template->delete();
+
+        return redirect()->route('templates.index')->with('flash_message', 'メールテンプレは正常に削除されました。');
     }
 }

@@ -11,4 +11,9 @@ class Studio extends Model
     protected $fillable = [
       'name', 'detail', 'store_id'
     ];
+
+    public function schedules()
+    {
+      return $this->hasMany('App\Schedule', 'studio_id', 'id');
+    }
 }
