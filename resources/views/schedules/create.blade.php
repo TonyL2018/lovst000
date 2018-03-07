@@ -14,6 +14,58 @@ function submitSchedule()
   document.getElementById("status").value = 'submit';
   document.getElementById("addSchedule").submit();
 }
+function showStudios(str)
+{
+    if (str=="")
+    {
+        return;
+    }
+    if (window.XMLHttpRequest)
+    {
+        // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        // IE6, IE5 浏览器执行代码
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            //alert(xmlhttp.responseText);
+            stores = document.getElementById('studio_id');
+            length = stores.length;
+            for(j=length;j>0;j--)
+            {
+              stores.remove(j);
+            }
+            studios = xmlhttp.responseText.split('?');
+            for(i=1;i<studios.length;i++)
+            {
+              items = studios[i].split('|');
+              if(items.length > 0)
+              {
+                var y=document.createElement('option');
+                y.value = items[0];
+                y.text = items[1];
+                try
+                {
+                  stores.add(y,null); // standards compliant
+                }
+                catch(ex)
+                {
+                  stores.add(y); // IE only
+                }
+              }
+            }
+            //document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+        }
+    }
+    xmlhttp.open("GET","/studios/list/"+str,true);
+    xmlhttp.send();
+}
 </script>
 <div class='col-lg-4 col-lg-offset-4'>
 
@@ -25,7 +77,7 @@ function submitSchedule()
     <div class='form-group'>
       {{Form::label('store_id', '店舗名')}}
       <br>
-      <select name="store_id" onchange="changeShop()">
+      <select name="store_id" id='store_id' onchange="showStudios(this.value)">
         <option></option>
         @if(isset(Auth::user()->store_id))
           <option value="{{Auth::user()->shop->id}}" @if(isset($store_id) && Auth::user()->shop->id == $store_id) selected @endif>{{Auth::user()->shop->name}}</option>
@@ -45,7 +97,7 @@ function submitSchedule()
     <div class='form-group'>
       {{Form::label('studio_id', 'スタジオ名')}}
       <br>
-      <select name="studio_id">
+      <select name="studio_id" id='studio_id'>
         <option></option>
         @if(isset($studios))
           @foreach ($studios as $studio)
@@ -122,6 +174,56 @@ function submitSchedule()
         <tr>
           <td>10</td>
           <td>{{ Form::time('coma_10', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>{{ Form::time('coma_11', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>{{ Form::time('coma_12', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>{{ Form::time('coma_13', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>{{ Form::time('coma_14', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>{{ Form::time('coma_15', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>{{ Form::time('coma_16', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td>{{ Form::time('coma_17', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>{{ Form::time('coma_18', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td>{{ Form::time('coma_19', '', array('class' => 'form-control')) }}</td>
+          <td>～</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>{{ Form::time('coma_20', '', array('class' => 'form-control')) }}</td>
           <td>～</td>
         </tr>
       </table>

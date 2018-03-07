@@ -19,10 +19,10 @@ class ShopController extends Controller
     public function index()
     {
       if(isset(Auth::user()->fc_id)){
-        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->get();
+        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else {
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
       }
       return view('shops.index', compact('honnbus'));
     }
@@ -36,10 +36,10 @@ class ShopController extends Controller
     {
       if(isset(Auth::user()->fc_id))
       {
-        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->get();
+        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else {
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
       }
       return view('shops.create')->with('honnbus', $honnbus);
     }
@@ -52,14 +52,9 @@ class ShopController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'address'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'fc_id'=>'required'
-      ]);
+      $this->validateInput($request);
 
-      $shop = Shop::create($request->only('name', 'address', 'detail', 'fc_id'));
+      $shop = Shop::create($request->only('name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email'));
 
       return redirect()->route('shops.index')
           ->with('flash_message',
@@ -74,7 +69,10 @@ class ShopController extends Controller
      */
     public function show($id)
     {
-        //
+      $shop = Shop::findOrFail($id);
+      $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
+
+      return view('shops.show', compact('shop', 'honnbus'));
     }
 
     /**
@@ -86,7 +84,7 @@ class ShopController extends Controller
     public function edit($id)
     {
         $shop = Shop::findOrFail($id);
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
 
         return view('shops.edit', compact('shop', 'honnbus'));
     }
@@ -101,14 +99,9 @@ class ShopController extends Controller
     public function update(Request $request, $id)
     {
       $shop = Shop::findOrFail($id);
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'address'=>'required|max:120',
-          'detail'=>'required|max:120',
-          'fc_id'=>'required'
-      ]);
+      $this->validateInput($request);
 
-      $shop->fill($request->only('name', 'address', 'detail', 'fc_id'))->save();
+      $shop->fill($request->only(['name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email']))->save();
 
       return redirect()->route('shops.index')
           ->with('flash_message',
@@ -123,7 +116,29 @@ class ShopController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $shop = Shop::findOrFail($id);
+        foreach ($shop->studios as $studio) {
+          $studio->delete_flg = 1;
+          $studio->save();
+        }
+        $shop->delete_flg = 1;
+        $shop->save();
+
+        return redirect()->route('shops.index')
+          ->with('flash_message',
+          '店舗が削除されました。');
     }
 
+    protected function validateInput(Request $request)
+    {
+      $this->validate($request, [
+          'name'=>'required|max:120',
+          'address'=>'required|max:120',
+          'route' => 'required|max:500',
+          'detail'=>'required|max:120',
+          'fc_id'=>'required',
+          'telephone'=>'required|min:10',
+          'email' => 'required|max:50'
+      ]);
+    }
 }

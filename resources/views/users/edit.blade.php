@@ -14,10 +14,32 @@
     {{ Form::model($user, array('route' => array('users.update', $user->id), 'method' => 'PUT')) }}{{-- Form model binding to automatically populate our fields with user data --}}
 
     <div class="form-group">
+        {{ Form::label('staff_id', 'アカウントID(スタッフID)') }}
+        {{ Form::text('staff_id', null, array('class' => 'form-control')) }}
+    </div>
+    <div class="form-group">
         {{ Form::label('name', '表示名') }}
         {{ Form::text('name', null, array('class' => 'form-control')) }}
     </div>
+    <div class="form-group">
+        {{ Form::label('last_name_kanji', '姓漢字') }}
+        {{ Form::text('last_name_kanji', null, array('class' => 'form-control')) }}
+    </div>
 
+    <div class="form-group">
+        {{ Form::label('first_name_kanji', '名漢字') }}
+        {{ Form::text('first_name_kanji', null, array('class' => 'form-control')) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('last_name_kana', '姓カナ') }}
+        {{ Form::text('last_name_kana', null, array('class' => 'form-control')) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('first_name_kana', '名カナ') }}
+        {{ Form::text('first_name_kana', null, array('class' => 'form-control')) }}
+    </div>
     <div class="form-group">
         {{ Form::label('email', 'メールアドレス') }}
         {{ Form::email('email', null, array('class' => 'form-control')) }}

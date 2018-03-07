@@ -22,8 +22,8 @@
     </div>
 
     <div class="form-group">
-        {{ Form::label('timelength', '契約期間') }}
-        {{ Form::text('timelength', '', array('class' => 'form-control')) }}
+        {{ Form::label('duration', '契約期間') }}
+        {{ Form::text('duration', '', array('class' => 'form-control')) }}
     </div>
 
     <div class="form-group">
@@ -37,8 +37,8 @@
     </div>
 
     <div class="form-group">
-        {{ Form::label('corporation1', '契約者氏名') }}
-        {{ Form::text('corporation1', '', array('class' => 'form-control')) }}
+        {{ Form::label('signer', '契約者氏名') }}
+        {{ Form::text('signer', '', array('class' => 'form-control')) }}
     </div>
 
     <div class="form-group">

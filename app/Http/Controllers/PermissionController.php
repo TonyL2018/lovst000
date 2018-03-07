@@ -117,8 +117,8 @@ class PermissionController extends Controller {
              'Permission'. $permission->name.' updated!');
       }
       else{
-        $permissions = Permission::all(); //Get all permissions
-        $roles = Role::get(); //Get all roles
+        $permissions = Permission::all();
+        $roles = Role::get();
         foreach ($roles as $role) {
           foreach ($permissions as $permission) {
             $input=$request->input('permission'.$role->id.$permission->id);

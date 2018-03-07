@@ -44,3 +44,5 @@ Route::resource('occupations', 'OccupationController', ['middleware' => ['auth',
 Route::resource('passwords', 'PasswordController');
 
 Route::resource('products', 'ProductController');
+
+Route::get('/studios/list/{id}', 'StudioController@list')->name('studios.list');

@@ -24,7 +24,7 @@ class HonnbuController extends Controller
     {
       if(isset(Auth::user()->fc_id))
       {
-        $honnbus = Honnbu::where('id', Auth::user()->fc_id)::where('delete_flg', '!=', 1)->get();
+        $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else {
         $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
@@ -50,19 +50,10 @@ class HonnbuController extends Controller
      */
     public function store(Request $request)
     {
-      $this->validate($request, [
-          'name'=>'required|max:120',
-          'start_date'=>'required|date',
-          'corporation'=>'required|max:120',
-          'representative'=>'required|max:120',
-          'capital'=>'required|max:120',
-          'tele_kaisya'=>'required|max:120',
-          'tele_kojin'=>'required|max:120',
-          'adress'=>'required|max:120',
-          'detail'=>'required|max:120'
-      ]);
+      $this->validateInput($request);
 
-      $honnbu = Honnbu::create($request->only('name', 'start_date', 'corporation', 'representative', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail'));
+      $honnbu = Honnbu::create($request->only('name', 'start_date', 'duration', 'corporation', 'representative',
+      'signer', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail'));
 
       return redirect()->route('honnbus.index')
           ->with('flash_message',
@@ -102,18 +93,9 @@ class HonnbuController extends Controller
     public function update(Request $request, $id)
     {
         $honnbu = Honnbu::findOrFail($id);
-        $this->validate($request, [
-          'name'=>'required|max:120',
-          'start_date'=>'required|date',
-          'corporation'=>'required|max:120',
-          'representative'=>'required|max:120',
-          'capital'=>'required|max:120',
-          'tele_kaisya'=>'required|max:120',
-          'tele_kojin'=>'required|max:120',
-          'adress'=>'required|max:120',
-          'detail'=>'required|max:120'
-        ]);
-        $input = $request->only('name', 'start_date', 'corporation', 'representative', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail');
+        $this->validateInput($request);
+        $input = $request->only('name', 'start_date', 'duration', 'corporation', 'representative',
+        'signer', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail');
         $honnbu->fill($input)->save();
         return redirect()->route('honnbus.index')
             ->with('flash_message',
@@ -129,9 +111,34 @@ class HonnbuController extends Controller
     public function destroy($id)
     {
         $honnbu = Honnbu::findOrFail($id);
+        foreach ($honnbu->$shops as $shop) {
+          foreach ($shop->studios as $studio) {
+            $studio->delete_flg = 1;
+            $studio->save();
+          }
+          $shop->delete_flg = 1;
+          $shop->save();
+        }
         $honnbu->delete_flg = 1;
         $honnbu->save();
         return redirect()->route('honnbus.index')
             ->with('flash_message', 'フランチャイズが削除されました。');
+    }
+
+    protected function validateInput(Request $request)
+    {
+      $this->validate($request, [
+          'name'=>'required|max:120',
+          'start_date'=>'required|date',
+          'duration'=>'required|max:50',
+          'corporation'=>'required|max:120',
+          'representative'=>'required|max:120',
+          'signer'=>'required|max:50',
+          'capital'=>'required|max:120',
+          'tele_kaisya'=>'required|max:120',
+          'tele_kojin'=>'required|max:120',
+          'adress'=>'required|max:120',
+          'detail'=>'required|max:120'
+      ]);
     }
 }

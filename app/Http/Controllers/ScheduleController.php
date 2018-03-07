@@ -23,7 +23,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
         return view('schedules.index')->with('honnbus', $honnbus);
     }
 
@@ -34,7 +34,7 @@ class ScheduleController extends Controller
      */
     public function create()
     {
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
         $studios;
         return view('schedules.create', compact('honnbus', 'studios'));
     }
@@ -50,10 +50,12 @@ class ScheduleController extends Controller
       $status = $request->input('status');
       if(isset($status) && $status === 'submit')
       {
+        $effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime(date('Y-m-d'))));
+
         $this->validate($request, [
           'studio_id' => 'required',
-          'start_date' => 'required|date',
-          'end_date' => 'required|date',
+          'start_date' => 'required|date|after:'.$effectiveDate,
+          'end_date' => 'required|date|after:start_date',
           'coma_1' => 'required',
           'coma_2' => 'required',
           'coma_3' => 'required',
@@ -68,16 +70,16 @@ class ScheduleController extends Controller
 
         $schedule = Schedule::create($request->only('studio_id', 'start_date', 'end_date', 'coma_1', 'coma_2', 'coma_3', 'coma_4', 'coma_5', 'coma_6', 'coma_7', 'coma_8', 'coma_9', 'coma_10'));
 
-        return redirect()->route('schedules.index')
+        return redirect()->route('schedules.create')
             ->with('flash_message',
              '予約枠が追加されました。');
       }
       else {
         $studios; $store_id=$request->input('store_id');
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
         if(isset($store_id))
         {
-          $studios = Studio::where('store_id', $store_id)->get();
+          $studios = Studio::where('store_id', $store_id)->where('delete_flg', '!=', 1)->get();
         }
         return view('schedules.create', compact('store_id', 'studios', 'honnbus'));
       }

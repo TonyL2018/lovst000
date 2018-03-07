@@ -16,4 +16,9 @@ class Studio extends Model
     {
       return $this->hasMany('App\Schedule', 'studio_id', 'id');
     }
+
+    public function shop()
+    {
+      return $this->belongsTo('App\Shop', 'store_id');
+    }
 }

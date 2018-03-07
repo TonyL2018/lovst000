@@ -13,3 +13,13 @@ alter table homestead.studio_schedule modify coma_10 time null
 alter table homestead.course alter column delete_flg set default false
 
 alter table homestead.course_question modify question_subtext varchar(500) null
+
+ALTER TABLE homestead.studio_schedule ADD COLUMN coma_11 TIME null AFTER coma_10
+
+ALTER TABLE homestead.shop ADD COLUMN email VARCHAR(50) NULL AFTER telephone
+
+ALTER TABLE homestead.shop ADD COLUMN route VARCHAR(500) NULL AFTER address
+
+ALTER TABLE homestead.fc_honnbu ADD COLUMN duration VARCHAR(100) NULL AFTER start_date
+
+ALTER TABLE homestead.fc_honnbu ADD COLUMN signer VARCHAR(50) NULL AFTER representative

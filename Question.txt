@@ -5,3 +5,11 @@ whether keep below authorization
 FC本部 と　店舗マネージャー
 whether keep below authorization
 スタジオ管理
+
+table columns waiting for confirmation in FC本部
+契約期間
+契約者氏名
+
+table columns waiting for confirmation in 店舗
+アクセス方法
+メールアドレス

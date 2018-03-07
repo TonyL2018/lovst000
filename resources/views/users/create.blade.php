@@ -56,7 +56,15 @@
         @endforeach
       </select>
     </div>
-
+    <div class='form-group'>
+      {{Form::label('fc_id', '所属')}}<br>
+      <select name="fc_id">
+        <option></option>
+        @foreach ($honnbus as $honnbu)
+            <option value="{{$honnbu->id}}">{{$honnbu->name}}</option>
+        @endforeach
+      </select>
+    </div>
     <div class="form-group">
         {{ Form::label('password', 'パスワード') }}<br>
         {{ Form::password('password', array('class' => 'form-control')) }}

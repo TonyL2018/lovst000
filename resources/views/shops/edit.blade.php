@@ -29,8 +29,8 @@
       {{ Form::text('address', null, array('class' => 'form-control')) }}
     </div>
     <div class="form-group">
-      {{ Form::label('detail1', 'アクセス方法') }}
-      {{ Form::textarea('detail1', null, array('class' => 'form-control', 'cols' => 10, 'rows' =>2)) }}
+      {{ Form::label('route', 'アクセス方法') }}
+      {{ Form::textarea('route', null, array('class' => 'form-control', 'cols' => 10, 'rows' =>2)) }}
     </div>
     <div class="form-group">
       {{ Form::label('telephone', '電話番号') }}

@@ -39,7 +39,8 @@ class UserController extends Controller {
     public function create() {
     //Get all roles and pass it to the view
         $roles = Role::get();
-        return view('users.create', ['roles'=>$roles]);
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
+        return view('users.create', compact('roles', 'honnbus'));
     }
 
     /**
@@ -49,28 +50,18 @@ class UserController extends Controller {
     * @return \Illuminate\Http\Response
     */
     public function store(Request $request) {
-        $this->validate($request, [
-            'staff_id'=>'required|integer',
-            'name'=>'required|max:120|unique:users',
-            'last_name_kanji'=>'required|max:120',
-            'first_name_kanji'=>'required|max:120',
-            'last_name_kana'=>'required|max:120',
-            'first_name_kana'=>'required|max:120',
-            'email'=>'required|email|unique:users',
-            'roles'=>'required',
-            'password'=>'required|min:6|confirmed'
-        ]);
+        $this->validateInput($request);
 
-        $user = User::create($request->only('email', 'name', 'password', 'staff_id', 'last_name_kanji', 'first_name_kanji', 'last_name_kana', 'first_name_kana'));
+        $user = User::create($request->only('email', 'name', 'password', 'staff_id', 'last_name_kanji',
+        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id'));
 
         $roles = $request['roles']; //Retrieving the roles field
     //Checking if a role was selected
         if (isset($roles)) {
-
-            foreach ($roles as $role) {
+          foreach ($roles as $role) {
             $role_r = Role::where('id', '=', $role)->firstOrFail();
             $user->assignRole($role_r); //Assigning role to user
-            }
+          }
         }
         else{
           $role_r = Role::where('id', '=', $roles)->firstOrFail();
@@ -118,13 +109,10 @@ class UserController extends Controller {
         $user = User::findOrFail($id); //Get role specified by id
 
     //Validate name, email and password fields
-        $this->validate($request, [
-            'name'=>'required|max:120',
-            'email'=>'required|email|unique:users,email,'.$id,
-            'password'=>'required|min:6|confirmed'
-        ]);
-        $input = $request->only(['name', 'email', 'password', 'fc_id']); //Retreive the name, email and password fields
-        $roles = $request['roles']; //Retreive all roles
+        $this->validateInput($request);
+        $input = $request->only(['name', 'email', 'password', 'staff_id', 'last_name_kanji',
+        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id']);
+        $roles = $request['roles'];
         $user->fill($input)->save();
 
         if (isset($roles)) {
@@ -152,5 +140,20 @@ class UserController extends Controller {
         return redirect()->route('users.index')
             ->with('flash_message',
              'ユーザーは正常に削除されました。');
+    }
+
+    protected function validateInput(Request $request)
+    {
+      $this->validate($request, [
+          'staff_id'=>'required|integer',
+          'name'=>'required|max:120|unique:users',
+          'last_name_kanji'=>'required|max:120',
+          'first_name_kanji'=>'required|max:120',
+          'last_name_kana'=>'required|max:120',
+          'first_name_kana'=>'required|max:120',
+          'email'=>'required|email|unique:users',
+          'roles'=>'required',
+          'password'=>'required|min:6|confirmed'
+      ]);
     }
 }

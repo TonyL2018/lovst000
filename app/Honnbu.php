@@ -9,7 +9,8 @@ class Honnbu extends Model
     protected $table = "fc_honnbu";
 
     protected $fillable = [
-        'name', 'detail', 'start_date', 'corporation', 'representative', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail'
+        'name', 'detail', 'start_date', 'duration', 'corporation', 'representative', 'signer',
+        'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail'
     ];
 
     public function studios()
@@ -21,7 +22,7 @@ class Honnbu extends Model
             'fc_id',
             'id',
             'id'
-        );
+        )->where('delete_flg','!=', 1);
     }
 
     public function shops()
@@ -29,7 +30,7 @@ class Honnbu extends Model
         return $this->hasMany(
             'App\Shop',
             'fc_id'
-        );
+        )->where('delete_flg','!=', 1);
     }
 
 }
