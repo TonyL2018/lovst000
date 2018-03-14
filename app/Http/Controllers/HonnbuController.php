@@ -22,12 +22,12 @@ class HonnbuController extends Controller
      */
     public function index()
     {
-      if(isset(Auth::user()->fc_id))
+      if(!(Auth::user()->isSuperOrNot()))
       {
         $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else {
-        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
+        $honnbus = Honnbu::available();
       }
       return view('honnbus.index', compact('honnbus'));
     }
@@ -52,8 +52,26 @@ class HonnbuController extends Controller
     {
       $this->validateInput($request);
 
-      $honnbu = Honnbu::create($request->only('name', 'start_date', 'duration', 'corporation', 'representative',
+      $honnbu = Honnbu::create($request->only('start_date', 'duration', 'corporation', 'representative',
       'signer', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail'));
+
+      $honnbu->name = $request['fc_name'];
+
+      $id = $honnbu->id;
+
+      if($id < 10)
+      {
+        $honnbu->fc_id = 'FC00'.$id;
+      }
+      elseif($id < 100)
+      {
+        $honnbu->fc_id = 'FC0'.$id;
+      }
+      else {
+        $honnbu->fc_id = 'FC'.$id;
+      }
+
+      $honnbu->save();
 
       return redirect()->route('honnbus.index')
           ->with('flash_message',
@@ -94,9 +112,11 @@ class HonnbuController extends Controller
     {
         $honnbu = Honnbu::findOrFail($id);
         $this->validateInput($request);
-        $input = $request->only('name', 'start_date', 'duration', 'corporation', 'representative',
+        $input = $request->only('start_date', 'duration', 'corporation', 'representative',
         'signer', 'capital', 'tele_kaisya', 'tele_kojin', 'adress', 'detail');
-        $honnbu->fill($input)->save();
+        $honnbu->fill($input);
+        $honnbu->name = $request['fc_name'];
+        $honnbu->save();
         return redirect()->route('honnbus.index')
             ->with('flash_message',
              'フランチャイズは正常に編集されました。');
@@ -111,7 +131,7 @@ class HonnbuController extends Controller
     public function destroy($id)
     {
         $honnbu = Honnbu::findOrFail($id);
-        foreach ($honnbu->$shops as $shop) {
+        foreach ($honnbu->shops as $shop) {
           foreach ($shop->studios as $studio) {
             $studio->delete_flg = 1;
             $studio->save();
@@ -122,13 +142,13 @@ class HonnbuController extends Controller
         $honnbu->delete_flg = 1;
         $honnbu->save();
         return redirect()->route('honnbus.index')
-            ->with('flash_message', 'フランチャイズが削除されました。');
+            ->with('flash_message', 'フランチャイズが停止されました。');
     }
 
     protected function validateInput(Request $request)
     {
       $this->validate($request, [
-          'name'=>'required|max:120',
+          'fc_name'=>'required|max:120',
           'start_date'=>'required|date',
           'duration'=>'required|max:50',
           'corporation'=>'required|max:120',
@@ -141,4 +161,5 @@ class HonnbuController extends Controller
           'detail'=>'required|max:120'
       ]);
     }
+
 }

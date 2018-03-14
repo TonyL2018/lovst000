@@ -12,13 +12,13 @@
     {{ Form::model($honnbu, array('route' => array('honnbus.update', $honnbu->id), 'method' => 'PUT')) }}
 
     <div class="form-group">
-        {{ Form::label('name', 'フランチャイズ名') }}
-        {{ Form::text('name', null, array('class' => 'form-control')) }}
+        {{ Form::label('fc_name', 'フランチャイズ名') }}
+        <br><input type="text" name='fc_name' id='fc_name' value='{{ $honnbu->name }}' class='form-control' />
     </div>
 
     <div class="form-group">
         {{ Form::label('start_date', '契約開始日') }}
-        {{ Form::text('start_date', null, array('class' => 'form-control')) }}
+        {{ Form::date('start_date', null, array('class' => 'form-control')) }}
     </div>
     <div class="form-group">
         {{ Form::label('duration', '契約期間') }}
@@ -67,8 +67,8 @@
 
     </div>
 
-    {{ Form::submit('保存', array('class' => 'btn btn-primary')) }}
-
+    {{ Form::submit('保存', array('class' => 'btn btn-primary')) }}&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
     {{ Form::close() }}
 
 </div>

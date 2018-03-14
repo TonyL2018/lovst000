@@ -20,6 +20,14 @@ class Shop extends Model
       )->where('delete_flg','!=', 1);
     }
 
+    public function holidays()
+    {
+      return $this->hasMany(
+          'App\Holiday',
+          'shop_id'
+        )->where('delete_flg','!=', 1);
+    }
+
     public function honnbu()
     {
       return $this->belongsTo('App\Honnbu', 'fc_id')->where('delete_flg','!=', 1);

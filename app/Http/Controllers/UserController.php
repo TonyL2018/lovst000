@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Honnbu;
+use App\Occupation;
+use App\StaffOccupation;
+
 use Auth;
 
 use Spatie\Permission\Models\Role;
@@ -27,7 +30,7 @@ class UserController extends Controller {
     */
     public function index() {
     //Get all users and pass it to the view
-        $users = User::all();
+        $users = User::where('delete_flg', '!=', 1)->get();
         return view('users.index')->with('users', $users);
     }
 
@@ -40,7 +43,8 @@ class UserController extends Controller {
     //Get all roles and pass it to the view
         $roles = Role::get();
         $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
-        return view('users.create', compact('roles', 'honnbus'));
+        $occupations = Occupation::where('delete_flg', '!=', 1)->get();
+        return view('users.create', compact('roles', 'honnbus', 'occupations'));
     }
 
     /**
@@ -51,23 +55,66 @@ class UserController extends Controller {
     */
     public function store(Request $request) {
         $this->validateInput($request);
+        $this->validate($request, [
+            'name'=>'required|max:120|unique:user',
+        ]);
 
-        $user = User::create($request->only('email', 'name', 'password', 'staff_id', 'last_name_kanji',
-        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id'));
+        $user = User::create($request->only('email', 'name', 'password', 'last_name_kanji',
+        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id', 'store_id', 'remarks'));
+
+        if(isset($request['store_id']) && $request['store_id'] != '')
+        {
+          $num = User::where('store_id', $request['store_id'])->count();
+          if($num > 0 && $num < 10)
+          {
+            $user->staff_id = str_replace('SH', 'ST', $user->shop->shop_id).'0'.$num;
+          }
+          else {
+            $user->staff_id = str_replace('SH', 'ST', $user->shop->shop_id).$num;
+          }
+        }
+        elseif(isset($request['fc_id']) && $request['fc_id'] > 0)
+        {
+          $user->staff_id = str_replace('FC', 'ST', $user->honnbu->fc_id).'00'.$user->id;
+        }
+        else {
+          $user->staff_id = 'ST00000'.$user->id;
+        }
+        $user->save();
+
+        $occupations = $request['occupations'];
+        if(isset($occupations))
+        {
+          if(is_array($occupations))
+          {
+            foreach ($occupations as $occupation) {
+              $staffOccupation = new StaffOccupation();
+              $staffOccupation->staff_id = $user->id;
+              $staffOccupation->occupation_id = $occupation;
+              $staffOccupation->save();
+            }
+          }
+          else {
+            $staffOccupation = new StaffOccupation();
+            $staffOccupation->staff_id = $user->id;
+            $staffOccupation->occupation_id = $occupations;
+            $staffOccupation->save();
+          }
+        }
 
         $roles = $request['roles']; //Retrieving the roles field
-    //Checking if a role was selected
         if (isset($roles)) {
-          foreach ($roles as $role) {
-            $role_r = Role::where('id', '=', $role)->firstOrFail();
+          if(is_array($roles)){
+            foreach ($roles as $role) {
+              $role_r = Role::where('id', '=', $role)->firstOrFail();
+              $user->assignRole($role_r); //Assigning role to user
+            }
+          }
+          else{
+            $role_r = Role::where('id', '=', $roles)->firstOrFail();
             $user->assignRole($role_r); //Assigning role to user
           }
         }
-        else{
-          $role_r = Role::where('id', '=', $roles)->firstOrFail();
-          $user->assignRole($role_r); //Assigning role to user
-        }
-    //Redirect to the users.index view and display message
         return redirect()->route('users.index')
             ->with('flash_message',
              'ユーザーが追加されました。');
@@ -92,9 +139,10 @@ class UserController extends Controller {
     public function edit($id) {
         $user = User::findOrFail($id); //Get user with specified id
         $roles = Role::get(); //Get all roles
-        $honnbus = Honnbu::all();
+        $honnbus = Honnbu::available();
+        $occupations = Occupation::available();
 
-        return view('users.edit', compact('user', 'roles', 'honnbus'));
+        return view('users.edit', compact('user', 'roles', 'honnbus', 'occupations'));
 
     }
 
@@ -110,10 +158,33 @@ class UserController extends Controller {
 
     //Validate name, email and password fields
         $this->validateInput($request);
-        $input = $request->only(['name', 'email', 'password', 'staff_id', 'last_name_kanji',
-        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id']);
+        $input = $request->only(['name', 'email', 'password', 'last_name_kanji',
+        'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id', 'store_id', 'remarks']);
         $roles = $request['roles'];
         $user->fill($input)->save();
+
+        foreach ($user->occupations as $occupation_c) {
+          $occupation_c->delete();
+        }
+        $occupations = $request->input('occupations');
+        if(isset($occupations))
+        {
+          if(is_array($occupations))
+          {
+            foreach ($occupations as $occupation) {
+              $staffOccupation = new StaffOccupation();
+              $staffOccupation->staff_id = $user->id;
+              $staffOccupation->occupation_id = $occupation;
+              $staffOccupation->save();
+            }
+          }
+          else {
+            $staffOccupation = new StaffOccupation();
+            $staffOccupation->staff_id = $user->id;
+            $staffOccupation->occupation_id = $occupations;
+            $staffOccupation->save();
+          }
+        }
 
         if (isset($roles)) {
             $user->roles()->sync($roles);  //If one or more role is selected associate user to roles
@@ -123,7 +194,7 @@ class UserController extends Controller {
         }
         return redirect()->route('users.index')
             ->with('flash_message',
-             'ユーザーは正常に編集されました。');
+            'ユーザーは正常に編集されました。');
     }
 
     /**
@@ -135,7 +206,9 @@ class UserController extends Controller {
     public function destroy($id) {
     //Find a user with a given id and delete
         $user = User::findOrFail($id);
-        $user->delete();
+        //$user->delete();
+        $user->delete_flg = 1;
+        $user->save();
 
         return redirect()->route('users.index')
             ->with('flash_message',
@@ -145,15 +218,15 @@ class UserController extends Controller {
     protected function validateInput(Request $request)
     {
       $this->validate($request, [
-          'staff_id'=>'required|integer',
-          'name'=>'required|max:120|unique:users',
           'last_name_kanji'=>'required|max:120',
           'first_name_kanji'=>'required|max:120',
           'last_name_kana'=>'required|max:120',
           'first_name_kana'=>'required|max:120',
-          'email'=>'required|email|unique:users',
+          'email'=>'required|email',
           'roles'=>'required',
+          'fc_id'=>'required',
           'password'=>'required|min:6|confirmed'
       ]);
     }
+
 }

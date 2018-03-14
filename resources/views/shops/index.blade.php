@@ -26,7 +26,7 @@
                 @foreach ($honnbu->shops as $shop)
                 <tr>
 
-                    <td>{{ $shop->id }}</td>
+                    <td>{{ $shop->shop_id }}</td>
                     <td>{{ $shop->name }}</td>
                     <td>
                     @foreach($shop->studios as $studio)
@@ -42,7 +42,7 @@
                     <a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                     {!! Form::open(['method' => 'DELETE', 'route' => ['shops.destroy', $shop->id] ]) !!}
-                    {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
 
                     </td>
@@ -53,9 +53,9 @@
 
         </table>
     </div>
-
-    <a href="{{ route('shops.create') }}" class="btn btn-success">店舗登録</a>
-
+    <br>
+    <a href="{{ route('shops.create') }}" class="btn btn-success">店舗登録</a>&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

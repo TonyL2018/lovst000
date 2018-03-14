@@ -81,7 +81,9 @@ class TemplateController extends Controller
      */
     public function edit($id)
     {
-        //
+        $statuses = Status::all();
+        $template = Template::findOrFail($id);
+        return view('templates.edit', compact('statuses', 'template'));
     }
 
     /**
@@ -93,7 +95,16 @@ class TemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $this->validate($request, [
+        'name' => 'required|max:120',
+        'title' => 'required|max:120',
+        'content' => 'required|max:500',
+        'status' => 'required|integer',
+      ]
+      );
+      $template = Template::findOrFail($id);
+      $template->fill($request->only('name', 'title', 'content', 'status'))->save();
+      return redirect()->route('templates.index')->with('flash_message', 'メールテンプレは正常に編集されました。');
     }
 
     /**
@@ -105,8 +116,9 @@ class TemplateController extends Controller
     public function destroy($id)
     {
         $template = Template::findOrFail($id);
-        $template->delete();
+        $template->delete_flg = 1;
+        $template->save();
 
-        return redirect()->route('templates.index')->with('flash_message', 'メールテンプレは正常に削除されました。');
+        return redirect()->route('templates.index')->with('flash_message', 'メールテンプレは正常に停止されました。');
     }
 }

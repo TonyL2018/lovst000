@@ -23,3 +23,19 @@ ALTER TABLE homestead.shop ADD COLUMN route VARCHAR(500) NULL AFTER address
 ALTER TABLE homestead.fc_honnbu ADD COLUMN duration VARCHAR(100) NULL AFTER start_date
 
 ALTER TABLE homestead.fc_honnbu ADD COLUMN signer VARCHAR(50) NULL AFTER representative
+
+ALTER TABLE homestead.fc_honnbu ADD COLUMN fc_id VARCHAR(10) NULL AFTER id
+
+ALTER TABLE homestead.shop ADD COLUMN shop_id VARCHAR(10) NULL AFTER id
+
+ALTER TABLE homestead.studio ADD COLUMN studio_id VARCHAR(10) NULL AFTER id
+
+ALTER TABLE homestead.user MODIFY staff_id VARCHAR(10) NULL
+
+ALTER TABLE homestead.shop_holiday MODIFY start_date DATE NULL
+
+ALTER TABLE homestead.shop_holiday MODIFY end_date DATE NULL
+
+ALTER TABLE homestead.user ADD COLUMN remarks VARCHAR(500) NULL AFTER store_id
+
+ALTER TABLE homestead.studio_course ALTER COLUMN delete_flg SET DEFAULT false

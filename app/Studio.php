@@ -14,11 +14,16 @@ class Studio extends Model
 
     public function schedules()
     {
-      return $this->hasMany('App\Schedule', 'studio_id', 'id');
+      return $this->hasMany('App\Schedule', 'studio_id', 'id')->orderBy('id');
     }
 
     public function shop()
     {
       return $this->belongsTo('App\Shop', 'store_id');
+    }
+
+    public function courses()
+    {
+      return $this->hasMany('App\StudioCourse', 'studio_id')->where('delete_flg', '!=', 1);
     }
 }

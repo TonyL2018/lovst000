@@ -26,17 +26,17 @@
                 @foreach ($shop->studios as $studio)
                 <tr>
 
-                    <td>{{ $studio->id }}</td>
-                    <td>{{ $studio->name }}</td>
+                    <td>{{ $studio->studio_id }}</td>
+                    <td><a href='{{ route('studios.show', $studio->id) }}'>{{ $studio->name }}</a></td>
                     <td>
                         {{$shop->name}}
                     </td>
-                    <td>{{ $studio->store_id }}</td>
+                    <td>{{ $shop->shop_id }}</td>
                     <td>
                     <a href="{{ route('studios.edit', $studio->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                     {!! Form::open(['method' => 'DELETE', 'route' => ['studios.destroy', $studio->id] ]) !!}
-                    {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
 
                     </td>
@@ -47,9 +47,9 @@
 
         </table>
     </div>
-
-    <a href="{{ route('studios.create') }}" class="btn btn-success">スタジオ登録</a>
-
+    <br>
+    <a href="{{ route('studios.create') }}" class="btn btn-success">スタジオ登録</a>&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

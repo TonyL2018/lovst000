@@ -4,7 +4,7 @@
 
 @section('content')
 <script>
-var x=0;
+var x=1;
 function addQuestion(){
   x++;
   document.getElementById('x').value = x;
@@ -34,7 +34,7 @@ function delQuestion(row){
     <h1><i class='fa fa-user-plus'></i> プラン作成：設問</h1>
     <hr>
     {{ Form::open(array('url' => 'courses')) }}
-    {{Form::hidden('x', '', array('id' => 'x'))}}
+    {{Form::hidden('x', '1', array('id' => 'x'))}}
     <div class='form-group'>
       {{Form::label('name', 'プラン名')}}
       <br>

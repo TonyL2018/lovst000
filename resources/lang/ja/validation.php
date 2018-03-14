@@ -116,5 +116,24 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+      'store_id' => '所属店舗',
+      'telephone' => '電話番号',
+      'post' => '郵便番号',
+      'address' => '住所',
+      'detail' => '備考',
+      'route' => 'アクセス方法',
+      'fc_name' => 'フランチャイズ名',
+      'start_date' => '契約開始日',
+      'duration' => '契約期間',
+      'corporation' => '法人名',
+      'representative' => '代表者氏名',
+      'signer' => '契約者氏名',
+      'capital' => '資本金',
+      'tele_kaisya' => '電話番号(会社)',
+      'tele_kojin' => '電話番号(携帯)',
+      'adress' => '住所',
+      'password' => 'パスワード',
+      'email' => 'メールアドレス',
+    ],
 ];

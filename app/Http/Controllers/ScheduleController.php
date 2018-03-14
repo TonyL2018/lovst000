@@ -8,6 +8,8 @@ use App\Studio;
 use App\Honnbu;
 
 use Auth;
+use Validator;
+use DB;
 
 class ScheduleController extends Controller
 {
@@ -23,7 +25,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $honnbus = Honnbu::where('delete_flg', '!=', 1)->get();
+        $honnbus = Honnbu::where('delete_flg', '!=', 1)->orderBy('id')->get();
         return view('schedules.index')->with('honnbus', $honnbus);
     }
 
@@ -52,25 +54,54 @@ class ScheduleController extends Controller
       {
         $effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime(date('Y-m-d'))));
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
           'studio_id' => 'required',
-          'start_date' => 'required|date|after:'.$effectiveDate,
+          //'start_date' => 'required|date|after:'.$effectiveDate,
           'end_date' => 'required|date|after:start_date',
-          'coma_1' => 'required',
-          'coma_2' => 'required',
-          'coma_3' => 'required',
-          'coma_4' => 'required',
-          'coma_5' => 'required',
-          'coma_6' => 'required',
-          'coma_7' => 'required',
-          'coma_8' => 'required',
-          'coma_9' => 'required',
-          'coma_10' => 'required',
         ]);
 
-        $schedule = Schedule::create($request->only('studio_id', 'start_date', 'end_date', 'coma_1', 'coma_2', 'coma_3', 'coma_4', 'coma_5', 'coma_6', 'coma_7', 'coma_8', 'coma_9', 'coma_10'));
+        if(!$validator->fails())
+        {
+          $schedules1 = Schedule::where('studio_id', $request['studio_id'])
+                ->where('start_date', '<=', $request['start_date'])
+                ->where('end_date', '>=', $request['start_date'])
+                ->get();
+          $schedules2 = Schedule::where('studio_id', $request['studio_id'])
+                ->where('start_date', '<=', $request['end_date'])
+                ->where('end_date', '>=', $request['end_date'])
+                ->get();
+          $schedules3 = Schedule::where('studio_id', $request['studio_id'])
+                ->whereBetween('start_date', array($request['start_date'], $request['end_date']))
+                ->get();
+          $schedules4 = Schedule::where('studio_id', $request['studio_id'])
+                ->whereBetween('end_date', array($request['start_date'], $request['end_date']))
+                ->get();
+          if ($schedules1->count() > 0 || $schedules2->count() > 0 || $schedules3->count() > 0 || $schedules4->count() > 0) {
+            $validator->after(function ($validator) {
+              $validator->errors()->add('duration', 'この適用期間は既に存在します！');
+            });
+          }
+        }
 
-        return redirect()->route('schedules.create')
+        if ($validator->fails()) {
+          return redirect()->route('schedules.create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $schedule = Schedule::create($request->only('studio_id', 'start_date', 'end_date'));
+
+        $x = 1;
+        for($i = 1; $i <= 20; $i++)
+        {
+          if(!empty($request['coma_'.$i]))
+          {
+            $schedule->{'coma_'.$x++} = $request['coma_'.$i];
+          }
+        }
+        $schedule->save();
+
+        return redirect()->route('schedules.index')
             ->with('flash_message',
              '予約枠が追加されました。');
       }
@@ -104,7 +135,8 @@ class ScheduleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $schedule = Schedule::findOrFail($id);
+        return view('schedules.edit')->with('schedule', $schedule);
     }
 
     /**
@@ -116,7 +148,63 @@ class ScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime(date('Y-m-d'))));
+
+      $validator = Validator::make($request->all(), [
+        'studio_id' => 'required',
+        //'start_date' => 'required|date|after:'.$effectiveDate,
+        'end_date' => 'required|date|after:start_date',
+      ]);
+
+      if(!$validator->fails())
+      {
+        $schedules1 = Schedule::where('id', '!=', $id)
+              ->where('studio_id', $request['studio_id'])
+              ->where('start_date', '<=', $request['start_date'])
+              ->where('end_date', '>=', $request['start_date'])
+              ->get();
+        $schedules2 = Schedule::where('id', '!=', $id)
+              ->where('studio_id', $request['studio_id'])
+              ->where('start_date', '<=', $request['end_date'])
+              ->where('end_date', '>=', $request['end_date'])
+              ->get();
+        $schedules3 = Schedule::where('id', '!=', $id)
+              ->where('studio_id', $request['studio_id'])
+              ->whereBetween('start_date', array($request['start_date'], $request['end_date']))
+              ->get();
+        $schedules4 = Schedule::where('id', '!=', $id)
+              ->where('studio_id', $request['studio_id'])
+              ->whereBetween('end_date', array($request['start_date'], $request['end_date']))
+              ->get();
+        if ($schedules1->count() > 0 || $schedules2->count() > 0 || $schedules3->count() > 0 || $schedules4->count() > 0) {
+          $validator->after(function ($validator) {
+            $validator->errors()->add('duration', 'この適用期間は既に存在します！');
+          });
+        }
+      }
+
+      if ($validator->fails()) {
+        return redirect()->route('schedules.edit', $id)
+                      ->withErrors($validator)
+                      ->withInput();
+      }
+
+      $schedule = Schedule::findOrFail($id);
+      $schedule->fill($request->only('start_date', 'end_date'))->save();
+      $x = 1;
+      for($i = 1; $i <= 20; $i++)
+      {
+        if(!empty($request['coma_'.$i]))
+        {
+          $schedule->{'coma_'.$x++} = $request['coma_'.$i];
+        }
+      }
+      for(;$x <= 20; $x++)
+      {
+        $schedule->{'coma_'.$x} = null;
+      }
+      $schedule->save();
+      return redirect()->route('schedules.index')->with('flash_message', '予約枠は正常に編集されました。');
     }
 
     /**
@@ -127,6 +215,5 @@ class ScheduleController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 }

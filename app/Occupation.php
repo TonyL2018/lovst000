@@ -11,4 +11,9 @@ class Occupation extends Model
     protected $fillable = [
       'name', 'delete_flg',
     ];
+
+    public static function available()
+    {
+      return Occupation::where('delete_flg', '!=', 1)->get();
+    }
 }

@@ -116,7 +116,9 @@
                 @endforeach
             </tbody>
         </table>
-        {{ Form::submit('保存', array('class' => 'index-button')) }}
+        <br>
+        {{ Form::submit('保存', array('class' => 'btn btn-primary')) }}&nbsp;
+        <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
       </div>
     </div>
   </div>

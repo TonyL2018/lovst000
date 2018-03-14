@@ -35,7 +35,7 @@ Route::resource('studios', 'StudioController');
 
 Route::resource('schedules', 'ScheduleController');
 
-Route::resource('courses', 'CourseController', ['middleware' => ['auth', 'checkRole:設定^プラン作成・編集']]);
+Route::resource('courses', 'CourseController', ['middleware' => ['auth', 'checkRole:設定^撮影内容作成・編集']]);
 
 Route::resource('templates', 'TemplateController');
 
@@ -46,3 +46,5 @@ Route::resource('passwords', 'PasswordController');
 Route::resource('products', 'ProductController');
 
 Route::get('/studios/list/{id}', 'StudioController@list')->name('studios.list');
+
+Route::get('/shops/list/{id}', 'ShopController@list')->name('shops.list');

@@ -24,7 +24,7 @@
                 @foreach ($honnbus as $honnbu)
                 <tr>
 
-                    <td>{{ $honnbu->id }}</td>
+                    <td>{{ $honnbu->fc_id }}</td>
                     <td>{{ $honnbu->name }}</td>
                     <td>
                       @foreach($honnbu->shops as $shop)
@@ -35,7 +35,7 @@
                     <a href="{{ route('honnbus.edit', $honnbu->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                     {!! Form::open(['method' => 'DELETE', 'route' => ['honnbus.destroy', $honnbu->id] ]) !!}
-                    {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
+                    {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                     {!! Form::close() !!}
 
                     </td>
@@ -45,9 +45,9 @@
 
         </table>
     </div>
-
-    <a href="{{ route('honnbus.create') }}" class="btn btn-success">フランチャイズ登録</a>
-
+    <br>
+    <a href="{{ route('honnbus.create') }}" class="btn btn-success">フランチャイズ登録</a>&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

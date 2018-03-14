@@ -63,7 +63,8 @@ class OccupationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $occupation = Occupation::findOrFail($id);
+        return view('occupations.edit')->with('occupation', $occupation);
     }
 
     /**
@@ -75,7 +76,12 @@ class OccupationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+          'name' => 'required|max:120',
+        ]);
+        $occupation = Occupation::findOrFail($id);
+        $occupation->fill(['name' => $request->input('name'), 'delete_flg' => $request->input('delete_flg')])->save();
+        return redirect()->route('occupations.index')->with('flash_message', 'スタッフは正常に編集されました。');
     }
 
     /**
@@ -87,7 +93,8 @@ class OccupationController extends Controller
     public function destroy($id)
     {
         $occupation = Occupation::findOrFail($id);
-        $occupation->delete();
-        return redirect()->route('occupations.index')->with('flash_message', 'スタッフ種別は正常に削除されました。');
+        $occupation->delete_flg = 1;
+        $occupation->save();
+        return redirect()->route('occupations.index')->with('flash_message', 'スタッフ種別は正常に停止されました。');
     }
 }

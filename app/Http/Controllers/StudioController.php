@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Studio;
 use App\Shop;
+use App\Course;
+use App\StudioCourse;
+use App\Schedule;
 
 use Auth;
 
@@ -23,7 +26,7 @@ class StudioController extends Controller
         if(isset(Auth::user()->store_id)){
           $shops = Shop::where('id', '=', Auth::user()->store_id)->where('delete_flg', '!=', 1)->get();
         }
-        elseif(isset(Auth::user()->fc_id)){
+        elseif(isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0){
           $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
         }
         else{
@@ -43,14 +46,15 @@ class StudioController extends Controller
       if(isset(Auth::user()->store_id)){
         $shops = Shop::where('id', '=', Auth::user()->store_id)->where('delete_flg', '!=', 1)->get();
       }
-      elseif(isset(Auth::user()->fc_id)){
+      elseif(isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0){
         $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else{
         $shops = Shop::where('delete_flg', '!=', 1)->get();
       }
+      $courses = Course::where('delete_flg', '!=', 1)->get();
 
-      return view("studios.create")->with('shops', $shops);
+      return view("studios.create", compact('shops', 'courses'));
     }
 
     /**
@@ -69,6 +73,24 @@ class StudioController extends Controller
 
       $studio = Studio::create($request->only('name', 'detail', 'store_id'));
 
+      $num = Studio::where('store_id', $request['store_id'])->count();
+      if($num < 10)
+      {
+        $studio->studio_id = str_replace('SH', 'SD', $studio->shop->shop_id).'0'.$num;
+      }
+      else {
+        $studio->studio_id = str_replace('SH', 'SD', $studio->shop->shop_id).$num;
+      }
+      $studio->save();
+
+      for($i = 0; $i < $request['x']; $i++)
+      {
+        if(!empty($request['course'.$i]))
+        {
+          StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => $request['order'.$i]]);
+        }
+      }
+
       return redirect()->route('studios.index')
           ->with('flash_message',
            'スタジオが追加されました。');
@@ -82,7 +104,12 @@ class StudioController extends Controller
      */
     public function show($id)
     {
-        //
+        $studio = Studio::findOrFail($id);
+        $schedule = Schedule::where('studio_id', $id)
+                      ->where('start_date', '<=', date('Y-m-d'))
+                      ->where('end_date', '>=', date('Y-m-d'))
+                      ->first();
+        return view('studios.show', compact('studio', 'schedule'));
     }
 
     /**
@@ -98,14 +125,14 @@ class StudioController extends Controller
         if(isset(Auth::user()->store_id)){
           $shops = Shop::where('id', '=', Auth::user()->store_id)->where('delete_flg', '!=', 1)->get();
         }
-        elseif(isset(Auth::user()->fc_id)){
+        elseif(isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0){
           $shops = Shop::where('fc_id', '=', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
         }
         else{
           $shops = Shop::where('delete_flg', '!=', 1)->get();
         }
-
-        return view('studios.edit', compact('studio', 'shops'));
+        $courses = Course::where('delete_flg', '!=', 1)->get();
+        return view('studios.edit', compact('studio', 'shops', 'courses'));
     }
 
     /**
@@ -125,6 +152,27 @@ class StudioController extends Controller
 
       $studio = Studio::findOrFail($id);
       $studio->fill($request->only('name', 'detail', 'store_id'))->save();
+      foreach($studio->courses as $course)
+      {
+        $course->delete_flg = 1;
+        $course->save();
+      }
+
+      for($i = 0; $i < $request['x']; $i++)
+      {
+        if(!empty($request['course'.$i]))
+        {
+          $_course = StudioCourse::where('studio_id', $studio->id)->where('course_id', $request['course'.$i])->first();
+          if(isset($_course))
+          {
+            $_course->delete_flg = 0;
+            $_course->save();
+          }
+          else {
+            StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => $request['order'.$i]]);
+          }
+        }
+      }
 
       return redirect()->route('studios.index')
           ->with('flash_message',
@@ -143,7 +191,7 @@ class StudioController extends Controller
         $studio->delete_flg = 1;
         $studio->save();
 
-        return redirect()->route('studios.index')->with('flash_message', 'スタジオが削除されました。');
+        return redirect()->route('studios.index')->with('flash_message', 'スタジオが停止されました。');
     }
 
     public function list($id)

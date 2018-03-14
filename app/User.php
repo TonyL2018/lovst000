@@ -28,7 +28,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'staff_id', 'last_name_kanji', 'first_name_kanji', 'last_name_kana', 'first_name_kana', 'fc_id'
+        'name', 'email', 'password', 'last_name_kanji', 'first_name_kanji',
+        'last_name_kana', 'first_name_kana', 'fc_id', 'store_id', 'remarks'
     ];
 
     /**
@@ -59,6 +60,16 @@ class User extends Authenticatable
     public function shop()
     {
       return $this->belongsTo('App\Shop', 'store_id');
+    }
+
+    public function _occupations()
+    {
+      return $this->hasMany('App\StaffOccupation', 'staff_id');
+    }
+
+    public function isSuperOrNot()
+    {
+      return (!isset($this->fc_id) || $this->fc_id < 0) ? true : false;
     }
 
 }

@@ -20,8 +20,9 @@
         {{ Form::radio('delete_flg', '1', array('class' => 'form-control')) }}&nbsp;無効
         {{ Form::radio('delete_flg', '0', array('class' => 'form-control')) }}&nbsp;有効
     </div>
-
-    {{ Form::submit('登録', array('class' => 'btn btn-primary')) }}
+    <br>
+    {{ Form::submit('作成', array('class' => 'btn btn-primary')) }}&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 
     {{ Form::close() }}
 <hr>

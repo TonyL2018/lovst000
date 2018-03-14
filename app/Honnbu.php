@@ -33,4 +33,9 @@ class Honnbu extends Model
         )->where('delete_flg','!=', 1);
     }
 
+    public static function available()
+    {
+      return Honnbu::where('delete_flg', '!=', 1)->get();
+    }
+
 }

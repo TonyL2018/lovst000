@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Studio;
 use App\Shop;
 use App\Honnbu;
+use App\Holiday;
 
 use Auth;
 
@@ -18,7 +19,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-      if(isset(Auth::user()->fc_id)){
+      if(isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0){
         $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
       else {
@@ -34,7 +35,7 @@ class ShopController extends Controller
      */
     public function create()
     {
-      if(isset(Auth::user()->fc_id))
+      if(isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0)
       {
         $honnbus = Honnbu::where('id', Auth::user()->fc_id)->where('delete_flg', '!=', 1)->get();
       }
@@ -54,8 +55,39 @@ class ShopController extends Controller
     {
       $this->validateInput($request);
 
-      $shop = Shop::create($request->only('name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email'));
+      $shop = Shop::create($request->only('name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email', 'post'));
 
+      $shops = Shop::where('fc_id', $request['fc_id']);
+
+      $num = $shops->count();
+      if($num < 10)
+      {
+        $shop->shop_id = str_replace('FC', 'SH', $shop->honnbu->fc_id).'0'.$num;
+      }
+      else {
+        $shop->shop_id = str_replace('FC', 'SH', $shop->honnbu->fc_id).$num;
+      }
+      $shop->save();
+
+      if(is_numeric($request['weeks1']) && is_numeric($request['day_week1']))
+      {
+        $holiday = new Holiday();
+        $holiday->shop_id = $shop->id;
+        $holiday->day_week = $request['day_week1'];
+        $holiday->weeks = $request['weeks1'];
+        $holiday->delete_flg = 0;
+        $holiday->save();
+      }
+
+      if(is_numeric($request['weeks2']) && is_numeric($request['day_week2']))
+      {
+        $holiday = new Holiday();
+        $holiday->shop_id = $shop->id;
+        $holiday->day_week = $request['day_week2'];
+        $holiday->weeks = $request['weeks2'];
+        $holiday->delete_flg = 0;
+        $holiday->save();
+      }
       return redirect()->route('shops.index')
           ->with('flash_message',
            '店舗が追加されました。');
@@ -101,7 +133,31 @@ class ShopController extends Controller
       $shop = Shop::findOrFail($id);
       $this->validateInput($request);
 
-      $shop->fill($request->only(['name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email']))->save();
+      $shop->fill($request->only(['name', 'address', 'route', 'detail', 'fc_id', 'telephone', 'email', 'post']))->save();
+
+      foreach ($shop->holidays as $holiday) {
+        $holiday->delete();
+      }
+
+      if(is_numeric($request['weeks1']) && is_numeric($request['day_week1']))
+      {
+        $holiday = new Holiday();
+        $holiday->shop_id = $shop->id;
+        $holiday->day_week = $request['day_week1'];
+        $holiday->weeks = $request['weeks1'];
+        $holiday->delete_flg = 0;
+        $holiday->save();
+      }
+
+      if(is_numeric($request['weeks2']) && is_numeric($request['day_week2']))
+      {
+        $holiday = new Holiday();
+        $holiday->shop_id = $shop->id;
+        $holiday->day_week = $request['day_week2'];
+        $holiday->weeks = $request['weeks2'];
+        $holiday->delete_flg = 0;
+        $holiday->save();
+      }
 
       return redirect()->route('shops.index')
           ->with('flash_message',
@@ -126,7 +182,7 @@ class ShopController extends Controller
 
         return redirect()->route('shops.index')
           ->with('flash_message',
-          '店舗が削除されました。');
+          '店舗が停止されました。');
     }
 
     protected function validateInput(Request $request)
@@ -137,8 +193,22 @@ class ShopController extends Controller
           'route' => 'required|max:500',
           'detail'=>'required|max:120',
           'fc_id'=>'required',
-          'telephone'=>'required|min:10',
-          'email' => 'required|max:50'
+          'telephone'=>'required|min:10000000|numeric',
+          'email' => 'required|max:50',
+          'post' => 'bail|required|min:1000000|numeric'
       ]);
+    }
+
+    public function list($id)
+    {
+      $response;
+      if(isset($id))
+      {
+        $shops = Shop::where('fc_id', $id)->where('delete_flg', '!=', 1)->get();
+        foreach ($shops as $shop) {
+          $response = '?'.$shop->id.'|'.$shop->name.'|';
+        }
+        return $response;
+      }
     }
 }

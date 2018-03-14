@@ -24,21 +24,19 @@
             <tbody>
                 @foreach ($products as $product)
                 <tr>
-                    <td rowspan="{{$product->prices->count()}}" style="vertical-align: middle">{{ $product->product_id }}</td>
-                    <td rowspan="{{$product->prices->count()}}" style="vertical-align: middle">{{ $product->name }}</td>
-                    <td rowspan="{{$product->prices->count()}}" style="vertical-align: middle">
-                        {{$product->kana}}
-                    </td>
+                    <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">{{ $product->product_id }}</td>
+                    <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">{{ $product->name }}</td>
+                    <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">{{$product->kana}}</td>
                     @if($product->prices->count() > 0)
-                    @foreach ($product->prices as $price)
-                    @if($loop->index > 0)
-                  </tr><tr>
-                    @endif
-                    <td>{{ $price->start_date }}~{{ $price->end_date }}</td>
-                    <td>
-                        ¥{{ $price->price }}
-                    </td>
-                    @endforeach
+                      @foreach ($product->prices as $price)
+                        @if($loop->index > 0)
+                    </tr><tr>
+                        @endif
+                      <td>{{ $price->start_date }}~{{ $price->end_date }}</td>
+                      <td>
+                          ¥{{ $price->price }}
+                      </td>
+                      @endforeach
                     @else
                     <td></td>
                     <td></td>
@@ -50,6 +48,8 @@
         </table>
     </div>
     {{$products->links()}}
+    <br>&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

@@ -28,7 +28,8 @@
 
     </div>
 
-    {{ Form::submit('パスワード変更', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('パスワード変更', array('class' => 'btn btn-primary')) }}&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 
     {{ Form::close() }}
 <hr>

@@ -19,6 +19,6 @@ class Course extends Model
 
     public function questions()
     {
-      return $this->hasMany('App\Question', 'course_id');
+      return $this->hasMany('App\Question', 'course_id')->where('delete_flg', '!=', 1);
     }
 }

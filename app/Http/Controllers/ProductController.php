@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-      $products = Product::paginate(3);
+      $products = Product::paginate(50);
       return view('products.index')->with('products', $products);
     }
 

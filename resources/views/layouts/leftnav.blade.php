@@ -43,7 +43,7 @@
               		<a style=" text-align:center; margin-top:30px;"><img src="{{ asset('img/myadd/logo.png') }}"></a>
               		<a style=" text-align:center; margin-top:30px; width:217px;"><span class="admin">{{Auth::user() -> name}}</span></a>
                   @if(isset(Auth::user() -> fc_id))
-                  <a href="javascript:void(0);" style=" text-align:center; width:217px; font-size:20px;"><span class="left-name">{{Auth::user() -> honnbu -> name}}</span></a>
+                  <a href="javascript:void(0);" style=" text-align:center; width:217px; font-size:20px;"><span class="left-name">@if(Auth::user()->fc_id == -1) LOVSTホールディングス @elseif(Auth::user()->fc_id == -2) LOVST事務所 @else {{Auth::user() -> honnbu -> name}} @endif</span></a>
                   @endif
                   <a href="javascript:void(0);" style=" text-align:center; width:217px"><span class="left-name">{{Auth::user()->getRoleNames()->first()}}({{Auth::user() -> name}})</span></a>
               		<a><div style=" width:80%; margin-top:30px; margin-left:10%; height:1px; background:#9a9a9a;"></div></a>
@@ -149,7 +149,7 @@
               		</a>
               	</li>
                 @php
-                if(Auth::user()->hasAnyPermission(['設定^フランチャイズ管理', '設定^店舗管理', '設定^スタジオ管理', '設定^アカウント管理', '設定^プラン作成・編集', '設定^メールテンプレート作成・編集', '設定^予約枠作成・編集', '設定^スタッフリスト管理', '設定^スタッフ種別の登録・編集', '設定^商品一覧'])){
+                if(Auth::user()->hasAnyPermission(['設定^フランチャイズ管理', '設定^店舗管理', '設定^スタジオ管理', '設定^アカウント管理', '設定^撮影内容作成・編集', '設定^メールテンプレート作成・編集', '設定^予約枠作成・編集', '設定^スタッフリスト管理', '設定^スタッフ種別の登録・編集', '設定^商品一覧'])){
                 @endphp
               	<li>
               		<a href="{{ route('setting') }}">

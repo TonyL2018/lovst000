@@ -31,7 +31,7 @@
       </tr>
       <tr>
         <td style="text-align:left; vertical-align: middle">{{ Form::label('', 'アクセス方法') }}</td>
-        <td style="text-align:left; vertical-align: middle"></td>
+        <td style="text-align:left; vertical-align: middle">{{ $shop->route }}</td>
       </tr>
       <tr>
         <td style="text-align:left; vertical-align: middle">{{ Form::label('', '電話番号') }}</td>
@@ -48,7 +48,8 @@
     </table>
 
 <hr>
-<a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary" style="margin-right: 3px;">編集</a>
+<a href="{{ route('shops.edit', $shop->id) }}" class="btn btn-primary" style="margin-right: 3px;">編集</a>&nbsp;
+<button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

@@ -46,14 +46,14 @@
                       <a href="{{ route('schedules.edit', $schedule->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                       {!! Form::open(['method' => 'DELETE', 'route' => ['schedules.destroy', $schedule->id] ]) !!}
-                      {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
+                      {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                       {!! Form::close() !!}
 
                       </td>
                   </tr>
                 @endforeach
                 @endforeach
-              @elseif (isset(Auth::user()->fc_id))
+              @elseif (isset(Auth::user()->fc_id) && Auth::user()->fc_id > 0)
                 @foreach(Auth::user()->honnbu->shops as $shop)
                 @foreach($shop->studios as $studio)
                 @foreach($studio->schedules as $schedule)
@@ -71,7 +71,7 @@
                       <a href="{{ route('schedules.edit', $schedule->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                       {!! Form::open(['method' => 'DELETE', 'route' => ['schedules.destroy', $schedule->id] ]) !!}
-                      {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
+                      {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                       {!! Form::close() !!}
 
                       </td>
@@ -97,10 +97,6 @@
                       <td>
                       <a href="{{ route('schedules.edit', $schedule->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
-                      {!! Form::open(['method' => 'DELETE', 'route' => ['schedules.destroy', $schedule->id] ]) !!}
-                      {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
-                      {!! Form::close() !!}
-
                       </td>
                   </tr>
                 @endforeach
@@ -111,9 +107,9 @@
             </tbody>
         </table>
     </div>
-
-    <a href="{{ route('schedules.create') }}" class="btn btn-success">予約枠登録</a>
-
+    <br>
+    <a href="{{ route('schedules.create') }}" class="btn btn-success">予約枠登録</a>&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
 </div>
 
 @endsection

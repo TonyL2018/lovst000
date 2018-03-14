@@ -12,8 +12,8 @@
     {{ Form::open(array('url' => 'honnbus')) }}
 
     <div class="form-group">
-        {{ Form::label('name', 'フランチャイズ名') }}
-        {{ Form::text('name', '', array('class' => 'form-control')) }}
+        {{ Form::label('fc_name', 'フランチャイズ名') }}
+        {{ Form::text('fc_name', '', array('class' => 'form-control')) }}
     </div>
 
     <div class="form-group">
@@ -68,8 +68,8 @@
 
     </div>
 
-    {{ Form::submit('登録', array('class' => 'btn btn-primary')) }}
-
+    {{ Form::submit('作成', array('class' => 'btn btn-primary')) }}&nbsp;
+    <button type='button' class="btn btn-warning" onclick="javascript:history.go(-1)">戻る</button>
     {{ Form::close() }}
 <hr>
 </div>

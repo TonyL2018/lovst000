@@ -51,14 +51,13 @@ class CourseController extends Controller
         for($i = 1; $i <= $x; $i++)
         {
           $questionName = $request->input('question_name'.$i);
-          if(isset($questionName))
+          if(isset($questionName) && !empty($questionName))
           {
-            //Question::create(['course_id' => $course->id, 'question_name' => $questionName, 'question_subtext' => $request->input('question_subtext'.$i), 'new_flg' => True]);
             Question::create(['course_id' => $course->id, 'question_name' => $questionName, 'new_flg' => True]);
           }
         }
 
-        return redirect()->route('courses.index')->with('flash_message', 'プランが追加されました。');
+        return redirect()->route('courses.index')->with('flash_message', '撮影内容が追加されました。');
     }
 
     /**
@@ -80,7 +79,8 @@ class CourseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('courses.edit')->with('course', $course);
     }
 
     /**
@@ -92,7 +92,37 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $this->validate($request, [
+        'name'=>'required|max:120',
+      ]);
+
+      $course = Course::findOrFail($id);
+      $course->name = $request['name'];
+      $course->save();
+      foreach ($course->questions as $question) {
+        $question->delete_flg = 1;
+        $question->save();
+      }
+
+      $x = $request->input('x');
+      for($i = 1; $i <= $x; $i++)
+      {
+        $questionName = $request->input('question_name'.$i);
+        if(isset($questionName) && !empty($questionName))
+        {
+          $question_c = Question::where('course_id', $course->id)->where('question_name', $questionName)->first();
+          if(isset($question_c))
+          {
+            $question_c->delete_flg = 0;
+            $question_c->save();
+          }
+          else{
+            Question::create(['course_id' => $course->id, 'question_name' => $questionName, 'new_flg' => True]);
+          }
+        }
+      }
+
+      return redirect()->route('courses.index')->with('flash_message', '撮影内容は正常に編集されました。');
     }
 
     /**
@@ -105,10 +135,12 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         foreach ($course->questions as $question) {
-          $question->delete();
+          $question->delete_flg = 1;
+          $question->save();
         }
-        $course->delete();
+        $course->delete_flg = 1;
+        $course->save();
 
-        return redirect()->route('courses.index')->with('flash_message', 'プランは正常に削除されました。');
+        return redirect()->route('courses.index')->with('flash_message', '撮影内容は正常に停止されました。');
     }
 }
