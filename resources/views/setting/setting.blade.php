@@ -75,7 +75,7 @@
       @hasanyrole('LOVSTホールディングス|LOVST事務所')
       <tbody valign="middle">
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">@can('設定^商品一覧')<a href='{{ route('products.index') }}'>商品一覧</a>@endcan</td>
+              <td style="text-align:left; vertical-align: middle">@can('設定^商品一覧')<a href='{{ route('products.list', [10, 1]) }}'>商品一覧</a>@endcan</td>
               <td style="text-align:left; vertical-align: middle">@can('設定^スタッフ種別の登録・編集')<a href='{{ route('occupations.index') }}'>スタッフ種別の登録・編集</a>@endcan</td>
           </tr>
           <tr style="font-size:11px;">
@@ -86,7 +86,7 @@
       @else
       <tbody valign="middle">
           <tr style="font-size:11px;">
-              <td style="text-align:left; vertical-align: middle">@can('設定^商品一覧')<a href='{{ route('products.index') }}'>商品一覧</a>@endcan</td>
+              <td style="text-align:left; vertical-align: middle">@can('設定^商品一覧')<a href='{{ route('products.list', [10, 1]) }}'>商品一覧</a>@endcan</td>
               <td style="text-align:left; vertical-align: middle"><a href='{{ route('passwords.index') }}'>パスワード変更</a></td>
           </tr>
       </tbody>

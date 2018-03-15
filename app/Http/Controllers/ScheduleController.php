@@ -57,6 +57,7 @@ class ScheduleController extends Controller
         $validator = Validator::make($request->all(), [
           'studio_id' => 'required',
           //'start_date' => 'required|date|after:'.$effectiveDate,
+          'start_date' => 'required|date',
           'end_date' => 'required|date|after:start_date',
         ]);
 
@@ -153,6 +154,7 @@ class ScheduleController extends Controller
       $validator = Validator::make($request->all(), [
         'studio_id' => 'required',
         //'start_date' => 'required|date|after:'.$effectiveDate,
+        'start_date' => 'required|date',
         'end_date' => 'required|date|after:start_date',
       ]);
 

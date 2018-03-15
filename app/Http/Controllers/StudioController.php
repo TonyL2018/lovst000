@@ -87,7 +87,7 @@ class StudioController extends Controller
       {
         if(!empty($request['course'.$i]))
         {
-          StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => $request['order'.$i]]);
+          StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => empty($request['order'.$i])?$i+1:$request['order'.$i]]);
         }
       }
 
@@ -166,10 +166,11 @@ class StudioController extends Controller
           if(isset($_course))
           {
             $_course->delete_flg = 0;
+            $_course->sort_num = empty($request['order'.$i])?$i+1:$request['order'.$i];
             $_course->save();
           }
           else {
-            StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => $request['order'.$i]]);
+            StudioCourse::create(['studio_id' => $studio->id, 'course_id' => $request['course'.$i], 'sort_num' => empty($request['order'.$i])?$i+1:$request['order'.$i]]);
           }
         }
       }
@@ -206,4 +207,5 @@ class StudioController extends Controller
         return $response;
       }
     }
+
 }

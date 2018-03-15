@@ -48,3 +48,5 @@ Route::resource('products', 'ProductController');
 Route::get('/studios/list/{id}', 'StudioController@list')->name('studios.list');
 
 Route::get('/shops/list/{id}', 'ShopController@list')->name('shops.list');
+
+Route::get('/products/list/{cnt}/{col}', 'ProductController@index')->name('products.list');

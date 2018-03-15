@@ -18,13 +18,12 @@ class CreateTables extends Migration
     // 管理ツールスタッフ情報
     Schema::create('user', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
-      $table->integer('staff_id')->default(0)->comment('スタッフID');
-      $table->string('name')->default('')->comment('ユーザ名');
+      $table->string('staff_id')->default('')->comment('スタッフID');
+      $table->string('name')->unique()->comment('ユーザ名');
       $table->string('last_name_kanji')->default('')->comment('姓漢字');
       $table->string('first_name_kanji')->default('')->comment('名漢字');
       $table->string('last_name_kana')->default('')->comment('姓カナ');
       $table->string('first_name_kana')->default('')->comment('名カナ');
-      // $table->string('email')->unique()->comment('メールアドレス');
       $table->string('email')->nullable()->comment('メールアドレス');
       $table->string('password')->comment('パスワード（変換）');
       $table->string('telephone')->nullable()->comment('電話番号');
@@ -237,8 +236,8 @@ class CreateTables extends Migration
       $table->integer('status_id')->comment('現在予約ステータスID');
       $table->integer('next_status_id')->nullable()->comment('次のステータスID');
       $table->integer('course_id')->comment('コースID');
-      $table->timestamp('tmp_date')->nullable()->comment('仮予約時間');
-      $table->timestamp('confirm_date')->nullable()->comment('予約確定時間');
+      $table->timestamp('reseve_date')->nullable()->comment('予約時間');
+      $table->timestamp('send_detail_mail_date')->nullable()->comment('詳細メール時間');
       $table->timestamp('photo_date')->nullable()->comment('撮影完了時間');
       $table->string('sumareji_id')->nullable()->comment('スマレジ決済ID');
       $table->boolean('cancel_flg')->nullable()->comment('キャンセルフラグ');
