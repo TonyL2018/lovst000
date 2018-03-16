@@ -12,6 +12,10 @@ use Auth;
 
 class ShopController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware(['auth', 'checkRole:設定^店舗管理']);
+    }
     /**
      * Display a listing of the resource.
      *

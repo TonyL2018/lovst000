@@ -13,7 +13,7 @@ class CoursesTableSeeder extends Seeder
     {
         DB::table('course')->insert([
           [
-            'id' => '1000001',
+            'id' => '1',
             'name' => 'お宮参り',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -22,7 +22,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000002',
+            'id' => '2',
             'name' => 'ハーフバースデー',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -31,7 +31,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000003',
+            'id' => '3',
             'name' => '1歳バースデー',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -40,7 +40,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000004',
+            'id' => '4',
             'name' => '2歳バースデー',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -49,7 +49,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000005',
+            'id' => '5',
             'name' => 'その他バースデー',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -58,7 +58,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000006',
+            'id' => '6',
             'name' => '入園入学、卒園卒業',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -67,7 +67,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000007',
+            'id' => '7',
             'name' => '七五三',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -76,7 +76,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000008',
+            'id' => '8',
             'name' => 'ハーフ成人式',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -85,7 +85,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000009',
+            'id' => '9',
             'name' => 'マタニティ',
             'new_flg' => '1',
             'owner_id' => '1',
@@ -94,7 +94,7 @@ class CoursesTableSeeder extends Seeder
             'updated_at' => new DateTime(),
           ],
           [
-            'id' => '1000010',
+            'id' => '10',
             'name' => 'その他の成長記録',
             'new_flg' => '1',
             'owner_id' => '1',

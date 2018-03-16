@@ -14,12 +14,12 @@ class Product extends Model
     }
 
     protected $fillable = [
-      'product_id',
-      'dep_id',
-      'code',
-      'name',
-      'kana',
+      'productId',
+      'categoryId',
+      'productCode',
+      'productName',
+      'productKana',
       'price',
-      'delete_flg',
+      'size',
     ];
 }

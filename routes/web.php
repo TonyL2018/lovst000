@@ -29,7 +29,7 @@ Route::resource('permissions', 'PermissionController', ['middleware' => ['auth',
 
 Route::resource('honnbus', 'HonnbuController');
 
-Route::resource('shops', 'ShopController', ['middleware' => ['auth', 'checkRole:設定^店舗管理']]);
+Route::resource('shops', 'ShopController');
 
 Route::resource('studios', 'StudioController');
 

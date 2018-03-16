@@ -30,12 +30,13 @@
                       <td>@if($course->delete_flg) 無効 @else 有効 @endif</td>
                       <td></td>
                       <td>
+                        @if($loop->index >= 10)
                       <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-info pull-left" style="margin-right: 3px;">編集</a>
 
                       {!! Form::open(['method' => 'DELETE', 'route' => ['courses.destroy', $course->id] ]) !!}
                       {!! Form::submit('停止', ['class' => 'btn btn-danger']) !!}
                       {!! Form::close() !!}
-
+                        @endif
                       </td>
                   </tr>
                 @endforeach

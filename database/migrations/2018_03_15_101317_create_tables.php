@@ -13,12 +13,9 @@ class CreateTables extends Migration
   */
   public function up()
   {
-    //
-    // user
-    // 管理ツールスタッフ情報
     Schema::create('user', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
-      $table->string('staff_id')->default('')->comment('スタッフID');
+      $table->string('staff_id', 10)->nullable()->comment('スタッフID');
       $table->string('name')->unique()->comment('ユーザ名');
       $table->string('last_name_kanji')->default('')->comment('姓漢字');
       $table->string('first_name_kanji')->default('')->comment('名漢字');
@@ -29,101 +26,122 @@ class CreateTables extends Migration
       $table->string('telephone')->nullable()->comment('電話番号');
       $table->integer('role_id')->default(5)->comment('ロールID');
       $table->integer('fc_id')->nullable()->comment('FC本部ID');
-      $table->integer('shop_id')->nullable()->comment('店舗ID');
+      $table->integer('store_id')->nullable()->comment('店舗ID');
+      $table->string('remarks', 500)->nullable();
       $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
+      $table->rememberToken();
       $table->timestamps();
     });
 
-    //FC本部
     Schema::create('fc_honnbu', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
-      $table->string('name')->comment('ユーザ名');
+      $table->string('fc_id', 10)->nullable();
+      $table->string('name')->nullable()->comment('ユーザ名');
       $table->string('detail',500)->comment('説明');
       $table->string('corporation')->nullable()->comment('法人名');
       $table->string('adress')->nullable()->comment('登記所在地');
       $table->string('telephone')->nullable()->comment('電話番号');
       $table->string('representative')->nullable()->comment('代表者名');
+      $table->string('signer', 50)->nullable();
       $table->date('birthday')->nullable()->comment('代表者名生年月日');
-      $table->integer('capital')->nullable()->comment('資本金');
+      $table->string('capital', 100)->nullable()->comment('資本金');
       $table->date('start_date')->nullable()->comment('契約開始日');
+      $table->string('duration', 100)->nullable();
       $table->string('tele_kaisya')->nullable()->comment('電話番号(会社)');
       $table->string('tele_kojin')->nullable()->comment('電話番号(個人)');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //店舗
     Schema::create('shop', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
+      $table->string('shop_id', 10)->nullable();
       $table->integer('fc_id')->comment('FC本部ID');
       $table->string('name')->comment('店舗名');
-      $table->integer('post')->comment('郵便番号');
+      $table->integer('post')->nullable()->comment('郵便番号');
       $table->string('address')->nullable()->comment('登記所在地');
+      $table->string('route', 500)->nullable();
       $table->string('detail',500)->nullable()->comment('説明');
       $table->string('telephone')->nullable()->comment('電話番号');
+      $table->string('email', 50)->nullable()->comment('メールアドレス');
       $table->string('train_station')->nullable()->comment('最寄り駅');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //店舗定休日
+    Schema::create('permissions', function (Blueprint $table) {
+        $table->increments('id');
+        $table->string('name');
+        $table->string('guard_name');
+        $table->timestamps();
+    });
+
+    Schema::create('roles', function (Blueprint $table) {
+        $table->increments('id');
+        $table->string('name');
+        $table->string('guard_name');
+        $table->timestamps();
+    });
+
     Schema::create('shop_holiday', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('shop_id')->comment('店舗ID');
-      $table->date('start_date')->comment('開始日付');
-      $table->date('end_date')->comment('終了日付');
-      $table->integer('day_week')->comment('曜日');
-      $table->integer('weeks')->comment('何週目');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->date('start_date')->nullable()->comment('開始日付');
+      $table->date('end_date')->nullable()->comment('終了日付');
+      $table->integer('day_week')->nullable()->comment('曜日');
+      $table->integer('weeks')->nullable()->comment('何週目');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //スタジオ情報
     Schema::create('studio', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
+      $table->string('studio_id', 10)->nullable();
       $table->string('name')->comment('スタジオ名');
       $table->string('detail',500)->comment('スタジオ詳細');
-      $table->integer('pack_type')->comment('プランのサポートタイプ(0：basicのみ,1:両方)');
-      $table->integer('shop_id')->comment('所属店舗');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->integer('pack_type')->default(0)->comment('プランのサポートタイプ(0：basicのみ,1:両方)');
+      $table->integer('store_id')->comment('所属店舗');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //スタジオの撮影コマ
     Schema::create('studio_schedule', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('studio_id')->comment('スタジオID');
       $table->date('start_date')->comment('開始日付');
       $table->date('end_date')->comment('終了日付');
-      $table->timestamp('coma_1')->nullable()->comment('コマ1');
-      $table->timestamp('coma_2')->nullable()->comment('コマ2');
-      $table->timestamp('coma_3')->nullable()->comment('コマ3');
-      $table->timestamp('coma_4')->nullable()->comment('コマ4');
-      $table->timestamp('coma_5')->nullable()->comment('コマ5');
-      $table->timestamp('coma_6')->nullable()->comment('コマ6');
-      $table->timestamp('coma_7')->nullable()->comment('コマ7');
-      $table->timestamp('coma_8')->nullable()->comment('コマ8');
-      $table->timestamp('coma_9')->nullable()->comment('コマ9');
-      $table->timestamp('coma_10')->nullable()->comment('コマ10');
-      $table->timestamp('coma_11')->nullable()->comment('コマ11');
-      $table->timestamp('coma_12')->nullable()->comment('コマ12');
-      $table->timestamp('coma_13')->nullable()->comment('コマ13');
-      $table->timestamp('coma_14')->nullable()->comment('コマ14');
-      $table->timestamp('coma_15')->nullable()->comment('コマ15');
+      $table->time('coma_1')->nullable()->comment('コマ1');
+      $table->time('coma_2')->nullable()->comment('コマ2');
+      $table->time('coma_3')->nullable()->comment('コマ3');
+      $table->time('coma_4')->nullable()->comment('コマ4');
+      $table->time('coma_5')->nullable()->comment('コマ5');
+      $table->time('coma_6')->nullable()->comment('コマ6');
+      $table->time('coma_7')->nullable()->comment('コマ7');
+      $table->time('coma_8')->nullable()->comment('コマ8');
+      $table->time('coma_9')->nullable()->comment('コマ9');
+      $table->time('coma_10')->nullable()->comment('コマ10');
+      $table->time('coma_11')->nullable()->comment('コマ11');
+      $table->time('coma_12')->nullable()->comment('コマ12');
+      $table->time('coma_13')->nullable()->comment('コマ13');
+      $table->time('coma_14')->nullable()->comment('コマ14');
+      $table->time('coma_15')->nullable()->comment('コマ15');
+      $table->time('coma_16')->nullable()->comment('コマ16');
+      $table->time('coma_17')->nullable()->comment('コマ17');
+      $table->time('coma_18')->nullable()->comment('コマ18');
+      $table->time('coma_19')->nullable()->comment('コマ19');
+      $table->time('coma_20')->nullable()->comment('コマ20');
       $table->timestamps();
     });
 
-    //スタジオ撮影可能コース
     Schema::create('studio_course', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('studio_id')->comment('スタジオID');
       $table->integer('course_id')->comment('コースID');
       $table->integer('sort_num')->comment('コース順');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //顧客情報を管理
     Schema::create('customer', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('customer_id',10)->comment('顧客ID');
@@ -141,7 +159,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //顧客情報＿お子様
     Schema::create('customer_child', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('customer_id')->comment('顧客ID');
@@ -153,31 +170,42 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //商品
     Schema::create('product', function (Blueprint $table) {
-      $table->increments('id')->comment('連番用ID');
-      $table->integer('product_id')->comment('商品ID');
-      $table->string('dep_id')->comment('部門ID');
-      $table->string('code')->comment('商品コード');
-      $table->string('name')->comment('商品名');
-      $table->string('kana')->comment('商品カナ');
-      $table->string('price')->comment('商品単価');
-      $table->string('cost')->nullable()->comment('原価');
-      $table->string('kisoku',500)->nullable()->comment('規格');
-      $table->string('setumei')->nullable()->comment('説明');
-      $table->string('catch_copy')->nullable()->comment('キャッチコピー');
-      $table->string('kaiin_price')->nullable()->comment('会員価格');
-      $table->string('size')->nullable()->comment('サイズ');
-      $table->string('color')->nullable()->comment('カラー');
-      $table->string('tag')->nullable()->comment('タグ');
-      $table->string('group_code')->nullable()->comment('グループコード');
-      $table->string('url')->nullable()->comment('URL');
-      $table->string('device')->nullable()->comment('端末表示');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->increments('id');
+      $table->bigInteger('productId')->nullable();
+      $table->integer('categoryId')->nullable();
+      $table->string('productCode', 20)->nullable();
+      $table->string('productName', 255)->nullable();
+      $table->string('productKana', 255)->nullable();
+      $table->char('taxDivision', 1)->nullable();
+      $table->char('productPriceDivision', 1)->nullable();
+      $table->decimal('price', 10)->nullable();
+      $table->decimal('customerPrice', 10)->nullable();
+      $table->decimal('cost', 15, 5)->nullable();
+      $table->text('attribute')->nullable();
+      $table->text('description')->nullable();
+      $table->text('catchCopy')->nullable();
+      $table->string('size', 255)->nullable();
+      $table->string('color', 255)->nullable();
+      $table->string('tag', 255)->nullable();
+      $table->string('groupCode', 255)->nullable();
+      $table->string('url', 255)->nullable();
+      $table->integer('displaySequence')->nullable();
+      $table->char('displayFlag', 1)->nullable();
+      $table->char('salesDivision', 1)->nullable();
+      $table->char('division', 1)->nullable();
+      $table->integer('productOptionGroupId')->nullable();
+      $table->char('stockControlDivision', 1)->nullable();
+      $table->char('pointNotApplicable', 1)->nullable();
+      $table->char('taxFreeDivision', 1)->nullable();
+      $table->char('supplierProductNo', 255)->nullable();
+      $table->integer('staffDiscountRate')->nullable();
+      $table->date('appStartDateTime')->nullable();
+      $table->date('insDateTime')->nullable();
+      $table->date('updDateTime')->nullable();
       $table->timestamps();
     });
 
-    //商品価額
     Schema::create('product_price', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('product_id')->comment('商品ID');
@@ -187,7 +215,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //注文ステータス
     Schema::create('order_status', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('name')->comment('ステータス名');
@@ -195,7 +222,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //予約ステータス
     Schema::create('reseve_status', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('status')->comment('ステータス名');
@@ -203,7 +229,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //メールテンプレート
     Schema::create('email_template', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('name')->comment('テンプレート名');
@@ -211,11 +236,10 @@ class CreateTables extends Migration
       $table->string('content',500)->comment('テンプレート内容');
       $table->integer('status')->comment('予約のステータス');
       $table->integer('owner_id')->nullable()->comment('オーナー');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //予約カレンダー
     Schema::create('reseve_calender', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('calender_id')->nullable()->comment('予約カレンダーID');
@@ -228,7 +252,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //顧客予約情報
     Schema::create('reseve_info', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('customer_id')->comment('顧客ID');
@@ -250,7 +273,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //予約詳細情報（既存コース）
     Schema::create('reseve_detail_old', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('calender_id')->comment('予約カレンダーID');
@@ -267,7 +289,6 @@ class CreateTables extends Migration
       $table->boolean('family_wear_flg')->nullable()->comment('家族写真の掛け着撮影の希望');
       $table->boolean('boby_only_flg')->nullable()->comment('赤ちゃん一人の掛け着撮影の希望');
       $table->integer('family_num')->nullable()->comment('参加家族数');
-
       $table->string('photo_content',500)->nullable()->comment('どのような撮影内容を希望');
       $table->integer('birthday_old')->nullable()->comment('何歳のパースデーをお祝い');
       $table->integer('pregnancy_week')->nullable()->comment('撮影日の妊娠週数');
@@ -278,7 +299,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //予約詳細情報（新コース）
     Schema::create('reseve_detail_new', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('calender_id')->comment('予約カレンダーID');
@@ -288,7 +308,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //顧客の予約履歴情報
     Schema::create('reseve_history', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('reseve_info_id')->comment('予約ID');
@@ -297,7 +316,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //予約担当者
     Schema::create('reseve_staff', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('reseve_info_id')->comment('予約ID');
@@ -305,38 +323,34 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //撮影コース
     Schema::create('course', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->string('name')->comment('コース名');
       $table->boolean('new_flg')->comment('新コースフラグ');
       $table->integer('owner_id')->nullable()->comment('オーナーID');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //撮影コースの質問
     Schema::create('course_question', function (Blueprint $table) {
       $table->increments('id')->comment('連番用ID');
       $table->integer('course_id')->comment('コースID');
       $table->integer('type_id')->nullable()->comment('質問タイプ');
       $table->string('question_name',500)->comment('質問内容');
-      $table->string('question_subtext',500)->comment('質問sub 内容');
+      $table->string('question_subtext',500)->nullable()->comment('質問sub 内容');
       $table->boolean('answer_required')->nullable()->comment('回答必須');
       $table->boolean('question_required')->nullable()->comment('質問表示');
       $table->integer('sort_num')->nullable()->comment('質問順番');
       $table->boolean('new_flg')->comment('新コースフラグ');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //質問タイプ
     Schema::create('input_type', function (Blueprint $table) {
       $table->increments('id')->comment('タイプID');
       $table->string('name')->comment('タイプ名');
     });
 
-    //質問オプション
     Schema::create('question_option', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('question_id')->comment('質問ID');
@@ -344,7 +358,6 @@ class CreateTables extends Migration
       $table->string('value')->nullable()->comment('オプションvalue');
     });
 
-    //撮影コースごと設問情報
     Schema::create('course_question_new', function (Blueprint $table) {
       $table->increments('id')->comment('設問ID');
       $table->integer('course_id')->comment('撮影コーステーブルを参照');
@@ -367,7 +380,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //商品注文情報
     Schema::create('product_order', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->string('order_id')->comment('注文ID');
@@ -382,7 +394,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //商品注文更新履歴
     Schema::create('product_order_history', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('order_id')->comment('注文ID');
@@ -393,15 +404,25 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //職種情報
     Schema::create('occupation', function (Blueprint $table) {
       $table->increments('id')->comment('設問ID');
       $table->string('name')->comment('職種名');
-      $table->boolean('delete_flg')->comment('削除フラグ');
+      $table->boolean('delete_flg')->default(0)->comment('削除フラグ');
       $table->timestamps();
     });
 
-    //商品注文更新履歴
+    Schema::create('model_has_permissions', function (Blueprint $table) {
+        $table->integer('permission_id')->unsigned();
+        $table->morphs('model');
+
+        $table->foreign('permission_id')
+            ->references('id')
+            ->on('permissions')
+            ->onDelete('cascade');
+
+        $table->primary(['permission_id', 'model_id', 'model_type']);
+    });
+
     Schema::create('photo', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('reseve_id')->comment('注文ID');
@@ -411,7 +432,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //緊急通知
     Schema::create('emergency_notice', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->string('content',500)->nullable()->comment('内容');
@@ -420,7 +440,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //お知らせ
     Schema::create('notice', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->string('title')->nullable()->comment('タイトル');
@@ -430,7 +449,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //お知らせ
     Schema::create('notice_read', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('notice_id')->comment('お知らせID');
@@ -438,7 +456,6 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //ロール情報
     Schema::create('role', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->string('name')->comment('ロール名');
@@ -447,7 +464,18 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    //店員情報
+    Schema::create('model_has_roles', function (Blueprint $table) {
+        $table->integer('role_id')->unsigned();
+        $table->morphs('model');
+
+        $table->foreign('role_id')
+            ->references('id')
+            ->on('roles')
+            ->onDelete('cascade');
+
+        $table->primary(['role_id', 'model_id', 'model_type']);
+    });
+
     Schema::create('employee', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('staff_id')->comment('スタッフID');
@@ -455,12 +483,35 @@ class CreateTables extends Migration
       $table->timestamps();
     });
 
-    // 店員と職種情報
     Schema::create('staff_occupation', function (Blueprint $table) {
       $table->increments('id')->comment('ID');
       $table->integer('staff_id')->comment('スタッフID');
       $table->integer('occupation_id')->comment('職種ID');
       $table->timestamps();
+    });
+
+    Schema::create('password_resets', function (Blueprint $table) {
+        $table->string('email')->index();
+        $table->string('token');
+        $table->timestamp('created_at')->nullable();
+    });
+
+    Schema::create('role_has_permissions', function (Blueprint $table) {
+        $table->integer('permission_id')->unsigned();
+        $table->integer('role_id')->unsigned();
+
+        $table->foreign('permission_id')
+            ->references('id')
+            ->on('permissions')
+            ->onDelete('cascade');
+
+        $table->foreign('role_id')
+            ->references('id')
+            ->on('roles')
+            ->onDelete('cascade');
+
+        $table->primary(['permission_id', 'role_id']);
+
     });
   }
 
@@ -471,7 +522,6 @@ class CreateTables extends Migration
   */
   public function down()
   {
-    //
     Schema::dropIfExists('user');
     Schema::dropIfExists('fc_honnbu');
     Schema::dropIfExists('shop');
@@ -508,5 +558,11 @@ class CreateTables extends Migration
     Schema::dropIfExists('role');
     Schema::dropIfExists('employee');
     Schema::dropIfExists('staff_occupation');
+    Schema::dropIfExists('role_has_permissions');
+    Schema::dropIfExists('model_has_roles');
+    Schema::dropIfExists('model_has_permissions');
+    Schema::dropIfExists('roles');
+    Schema::dropIfExists('permissions');
+    Schema::dropIfExists('password_resets');
   }
 }

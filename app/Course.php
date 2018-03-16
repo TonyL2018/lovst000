@@ -21,4 +21,5 @@ class Course extends Model
     {
       return $this->hasMany('App\Question', 'course_id')->where('delete_flg', '!=', 1);
     }
+
 }

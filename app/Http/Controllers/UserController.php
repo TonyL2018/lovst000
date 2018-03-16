@@ -163,8 +163,11 @@ class UserController extends Controller {
         $roles = $request['roles'];
         $user->fill($input)->save();
 
-        foreach ($user->occupations as $occupation_c) {
-          $occupation_c->delete();
+        if(isset($user->occupations))
+        {
+          foreach ($user->occupations as $occupation_c) {
+            $occupation_c->delete();
+          }
         }
         $occupations = $request->input('occupations');
         if(isset($occupations))
@@ -224,7 +227,7 @@ class UserController extends Controller {
           'first_name_kana'=>'required|max:120',
           'email'=>'required|email',
           'roles'=>'required',
-          'fc_id'=>'required',
+          //'fc_id'=>'required',
           'password'=>'required|min:6|confirmed'
       ]);
     }

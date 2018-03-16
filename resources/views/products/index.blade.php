@@ -42,7 +42,7 @@ function listProducts2(cnt)
 
             <thead>
                 <tr>
-                    <th><a onclick="listProducts2(1)" style="cursor:pointer">商品ID</a> / 商品コード / 商品名</th>
+                    <th><a onclick="listProducts2(1)" style="cursor:pointer">商品ID</a>@if($col == 1)↑@endif @if($col == 2)↓@endif / 商品コード / 商品名</th>
                     <th>商品単価</th>
                     <th>原価</th>
                     <th>端末表示</th>
@@ -53,7 +53,7 @@ function listProducts2(cnt)
             <tbody>
                 @foreach ($products as $product)
                 <tr>
-                    <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">{{ $product->product_id }} - {{ $product->code }}<br>{{ $product->name }}</td>
+                    <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">{{ $product->productId }} - {{ $product->productCode }}<br>{{ $product->productName }}</td>
                     <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle">￥{{number_format($product->price)}}<br>税込</td>
                     <td rowspan="{{$product->prices->count() > 0 ? $product->prices->count() : 1}}" style="vertical-align: middle"></td>
                     @if($product->prices->count() > 0)

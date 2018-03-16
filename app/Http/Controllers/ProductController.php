@@ -23,14 +23,14 @@ class ProductController extends Controller
     {
       if($col == 1)
       {
-        $products = Product::orderBy('product_id', 'asc')->paginate($cnt);
+        $products = Product::orderBy('productId', 'asc')->paginate($cnt);
       }
       elseif($col == 2)
       {
-        $products = Product::orderBy('product_id', 'desc')->paginate($cnt);
+        $products = Product::orderBy('productId', 'desc')->paginate($cnt);
       }
       else {
-        $products = Product::orderBy('product_id', 'desc')->paginate($cnt);
+        $products = Product::orderBy('productId', 'desc')->paginate($cnt);
       }
       return view('products.index', compact('products', 'cnt', 'col', 'row'));
     }
@@ -54,8 +54,8 @@ class ProductController extends Controller
     public function store(Request $request)
     {
       $this->updateProduct();
-      $this->updatePrice();
-      return redirect()->route('products.index')->with('flash_message', '商品がインポートされました。');
+      //$this->updatePrice();
+      return redirect()->route('products.list', [30, 1])->with('flash_message', '商品がインポートされました。');
     }
 
     /**
@@ -150,14 +150,13 @@ class ProductController extends Controller
       // $cnt = $goods->total_count;
       foreach ($results as $good) {
         Product::create([
-          'product_id' => $good->productId,
-          'dep_id' => $good->categoryId,
-          'code' => $good->productCode,
-          'name' => $good->productName,
-          'kana' => '',
+          'productId' => $good->productId,
+          'categoryId' => $good->categoryId,
+          'productCode' => $good->productCode,
+          'productName' => $good->productName,
+          'productKana' => '',
           'price' => $good->price,
           'size' => $good->size,
-          'delete_flg' => 0,
         ]);
       }
       Product::where('id', '<=', $id)->delete();
