@@ -1,0 +1,147 @@
+php -r "readfile('https://getcomposer.org/installer');" | php(Windows) 或 curl -sS https://getcomposer.org/installer | php(Unix/Mac OS X)
+php composer.phar init
+composer update
+php composer.phar create-project --prefer-dist laravel/laravel lovst
+
+使用上述命令创建一个新的Laravel项目
+
+接下来需要配置environment，包括使用
+php artisan key:generate
+生成key，及设置TimeZone和language
+
+使用
+composer require caouecs/laravel-lang:~3.0
+下载语言包到vendor目录下, 然后拷贝到resources/lang
+
+使用
+composer require guzzlehttp/guzzle
+下载发送邮件所需要的API驱动
+
+使用
+php artisan make:notification ResetPasswordNotification
+php artisan vendor:publish --tag=laravel-notifications
+创建重置密码的邮件发送内容实现类, 并修改User.app增加以下内容
+use App\Notifications\ResetPasswordNotification as RestPasswordNotification;
+
+	public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new RestPasswordNotification($token));
+    }
+ResetPasswordNotification修改以下内容
+	public $token;
+
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct($token)
+    {
+        $this->token = $token;
+    }
+########################################################################################################
+权限管理使用laravel-permission，以下为安装方法链接
+https://github.com/spatie/laravel-permission
+
+首先通过以下命令为项目添加框架
+composer require spatie/laravel-permission
+然后添加provider到config/app.php
+Spatie\Permission\PermissionServiceProvider::class,
+接下来通过publish命令添加数据库migrate脚本
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+接下来通过以下命令来创建数据表到数据库
+php artisan migrate
+然后生成相应config文件
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+使用以下命令添加中间件到app/Http/Kernel.php
+'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+为项目添加UI代码
+composer require laravelcollective/html
+添加新的provider到config/app.php
+Collective\Html\HtmlServiceProvider::class,
+添加两个别名到config/app.php
+'Form' => Collective\Html\FormFacade::class,
+'Html' => Collective\Html\HtmlFacade::class,
+########################################################################################################
+mysql设置非安全执行模式
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM instructor WHERE salary BETWEEN 13000 AND 15000;
+SET SQL_SAFE_UPDATES = 1;
+########################################################################################################
+laravel的model类允许通过定义方法来钻取关联对象，simply有hasMany或hasManyThrough和belongsTo两个方法，在view页面可以像访问类的属性一样来访问关联对象，非常方便
+########################################################################################################
+laravel通过middleware来验证用户是否登录及是否有对应权限，而不是像java那样使用filter，laravel的方式似乎更灵活，但配置也要细致一些
+########################################################################################################
+通过以下步骤在浏览器debug laravel项目
+
+composer require barryvdh/laravel-debugbar
+
+安装完成后，修改 config/app.php 在 providers 数组内追加 Debugbar 的 Provider
+Barryvdh\Debugbar\ServiceProvider::class,
+同时在 aliases 数组内追加如下内容
+'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+########################################################################################################
+通过以下命令初始化数据库基础数据
+php artisan db:seed --class=ReseveStatusTableSeeder
+########################################################################################################
+在laravel框架使用ajax
+function showStudios(str)
+{
+    if (str=="")
+    {
+        return;
+    }
+    if (window.XMLHttpRequest)
+    {
+        //for IE7
+		xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            stores = document.getElementById('studio_id');
+            length = stores.length;
+            for(j=length;j>0;j--)
+            {
+              stores.remove(j);
+            }
+            studios = xmlhttp.responseText.split('?');
+            for(i=1;i<studios.length;i++)
+            {
+              items = studios[i].split('|');
+              if(items.length > 0)
+              {
+                var y=document.createElement('option');
+                y.value = items[0];
+                y.text = items[1];
+                try
+                {
+                  //standard operation
+				  stores.add(y,null);
+                }
+                catch(ex)
+                {
+                  //for IE only
+				  stores.add(y);
+                }
+              }
+            }
+        }
+    }
+    xmlhttp.open("GET","/studios/list/"+str,true);
+    xmlhttp.send();
+}
+以下为route的配置内容
+Route::get('/studios/list/{id}', 'StudioController@list')->name('studios.list');
+########################################################################################################
+Laravel需要在controller中接收一个数组时，HTML页面的form中，input的name需要加上[]，controller中$request取获取时，则不需要[]
+########################################################################################################
